@@ -11,13 +11,12 @@ from sklearn import impute
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import LassoCV
 from xgboost import XGBRegressor
-from statsmodels.imputation import mice, bayes_mi
+from statsmodels.imputation import mice
 import statsmodels.api as sm
-
 from .xputer_main import Xpute
 
 
-class XeroGraph:
+class XeroAnalyzer:
     """
     A class to analyze missing data patterns and apply Little's MCAR test.
 
@@ -26,7 +25,7 @@ class XeroGraph:
     missing (DataFrame): A binary matrix indicating missing data within `data`.
     """
 
-    def __init__(self, data, save_files=False, save_path="", max_iter=10):
+    def __init__(self, data, save_files=False, save_path=""):
         """
         Initialize the DataAnalyzer with data.
 
@@ -51,8 +50,9 @@ class XeroGraph:
         self.save_path = save_path
         self.index = data.index
         self.columns = data.columns
-        self.max_iter = max_iter
         self._preprocess_data()
+        self.min_value = np.min(np.min(data, axis=0))
+        self.max_value = np.max(np.max(data, axis=0))
 
     def _preprocess_data(self):
         """Private method to preprocess and check data integrity."""
@@ -385,8 +385,10 @@ class XeroGraph:
             df.to_csv(filename)
         return df
     
-    def iterative_imputation(self, plot_convergence=False):
-        imputer = impute.IterativeImputer(max_iter=self.max_iter, random_state=0, sample_posterior=plot_convergence)
+    def iterative_imputation(self, plot_convergence=False, max_iter=25):
+        imputer = impute.IterativeImputer(max_iter=max_iter, random_state=0,
+                                          min_value=self.min_value, max_value=self.max_value,
+                                          sample_posterior=plot_convergence)
         imputed = None
 
         if plot_convergence:
@@ -394,7 +396,7 @@ class XeroGraph:
             imputer.fit(self.data)
             for col in cols_with_missing:
                 values = []
-                for i in range(self.max_iter):
+                for i in range(max_iter):
                     imputed = imputer.transform(self.data)
                     values.append(imputed[:, self.data.columns.get_loc(col)])
 
@@ -422,32 +424,11 @@ class XeroGraph:
             df.to_csv(filename)
         return df
 
-    def random_forest_imputation(self, plot_convergence=False):
-        imputer = impute.IterativeImputer(estimator=RandomForestRegressor(), max_iter=self.max_iter, random_state=0,
-                                          sample_posterior=plot_convergence)
-        imputed = None
-
-        if plot_convergence:
-            cols_with_missing = [col for col in self.data.columns if self.data[col].isnull().any()]
-            imputer.fit(self.data)
-            for col in cols_with_missing:
-                values = []
-                for i in range(self.max_iter):
-                    imputed = imputer.transform(self.data)
-                    values.append(imputed[:, self.data.columns.get_loc(col)])
-
-                values = np.array(values).T
-
-                plt.figure(figsize=(10, 6))
-                for value_set in values:
-                    plt.plot(value_set, marker='o', linestyle='-', alpha=0.3)
-                plt.title(f'Convergence check for {col}')
-                plt.xlabel('Iteration number')
-                plt.ylabel('Imputed values')
-                plt.grid(True)
-                plt.show()
-        else:
-            imputed = imputer.fit_transform(self.data)
+    def random_forest_imputation(self):
+        imputer = impute.IterativeImputer(estimator=RandomForestRegressor(n_jobs=-1),
+                                          max_iter=25, random_state=0,
+                                          min_value=self.min_value, max_value=self.max_value)
+        imputed = imputer.fit_transform(self.data)
 
         df = pd.DataFrame(imputed, index=self.index, columns=self.columns)
         if self.save_files:
@@ -460,32 +441,11 @@ class XeroGraph:
             df.to_csv(filename)
         return df
 
-    def lasso_cv_imputation(self, plot_convergence=False):
-        imputer = impute.IterativeImputer(estimator=LassoCV(max_iter=100000), max_iter=self.max_iter, random_state=0,
-                                          sample_posterior=plot_convergence)
-        imputed = None
-
-        if plot_convergence:
-            cols_with_missing = [col for col in self.data.columns if self.data[col].isnull().any()]
-            imputer.fit(self.data)
-            for col in cols_with_missing:
-                values = []
-                for i in range(self.max_iter):
-                    imputed = imputer.transform(self.data)
-                    values.append(imputed[:, self.data.columns.get_loc(col)])
-
-                values = np.array(values).T
-
-                plt.figure(figsize=(10, 6))
-                for value_set in values:
-                    plt.plot(value_set, marker='o', linestyle='-', alpha=0.3)
-                plt.title(f'Convergence check for {col}')
-                plt.xlabel('Iteration number')
-                plt.ylabel('Imputed values')
-                plt.grid(True)
-                plt.show()
-        else:
-            imputed = imputer.fit_transform(self.data)
+    def lasso_cv_imputation(self):
+        imputer = impute.IterativeImputer(estimator=LassoCV(max_iter=100000, n_jobs=-1),
+                                          max_iter=1000, random_state=0,
+                                          min_value=self.min_value, max_value=self.max_value)
+        imputed = imputer.fit_transform(self.data)
         df = pd.DataFrame(imputed, index=self.index, columns=self.columns)
         if self.save_files:
             # Get the current date and time
@@ -497,32 +457,11 @@ class XeroGraph:
             df.to_csv(filename)
         return df
 
-    def xgboost_imputation(self, plot_convergence=False):
-        imputer = impute.IterativeImputer(estimator=XGBRegressor(), max_iter=self.max_iter, random_state=0,
-                                          sample_posterior=plot_convergence)
-        imputed = None
+    def xgboost_imputation(self):
+        imputer = impute.IterativeImputer(estimator=XGBRegressor(n_jobs=-1), max_iter=100, random_state=0,
+                                          min_value=self.min_value, max_value=self.max_value)
 
-        if plot_convergence:
-            cols_with_missing = [col for col in self.data.columns if self.data[col].isnull().any()]
-            imputer.fit(self.data)
-            for col in cols_with_missing:
-                values = []
-                for i in range(self.max_iter):
-                    imputed = imputer.transform(self.data)
-                    values.append(imputed[:, self.data.columns.get_loc(col)])
-
-                values = np.array(values).T
-
-                plt.figure(figsize=(10, 6))
-                for value_set in values:
-                    plt.plot(value_set, marker='o', linestyle='-', alpha=0.3)
-                plt.title(f'Convergence check for {col}')
-                plt.xlabel('Iteration number')
-                plt.ylabel('Imputed values')
-                plt.grid(True)
-                plt.show()
-        else:
-            imputed = imputer.fit_transform(self.data)
+        imputed = imputer.fit_transform(self.data)
         df = pd.DataFrame(imputed, index=self.index, columns=self.columns)
         if self.save_files:
             # Get the current date and time
@@ -535,8 +474,8 @@ class XeroGraph:
         return df
 
     def xputer_imputation(self):
-        imputer = Xpute(impute_zeros=False, pre_imputation='MixType', xgb_models=3, mf_for_xgb=False,
-                        use_transformed_df=False, optuna_for_xgb=False, optuna_n_trials=50, n_iterations=3,
+        imputer = Xpute(impute_zeros=False, pre_imputation='MixType', xgb_models=3, mf_for_xgb=True,
+                        use_transformed_df=False, optuna_for_xgb=True, optuna_n_trials=50, n_iterations=3,
                         save_imputed_df=False, save_plots=False, test_mode=False)
         df = imputer.fit(self.data)
         
@@ -616,33 +555,10 @@ class XeroGraph:
             formula = f"{column} ~ " + " + ".join(other_columns)
             mi_model = mice.MICE(formula, sm.OLS, mice_data)
             mi_results = mi_model.fit(10, 10)  # Using 10 imputations with 10 iterations each
+            print(mi_results)
 
         # Retrieve imputed data
         imputed_data = mice_data.data
-
-        return imputed_data
-
-    def bayes_mi_imp(self):
-        # Initialize MI Data instance
-        imp = sm.BayesGaussMI(self.data)
-
-        # Prepare model formulas dynamically for columns with missing data
-        cols_with_missing = self.data.columns[self.data.isnull().any()].tolist()
-
-        # Create a formula and perform MI only for columns with missing data
-        mi_models = []
-        for column in cols_with_missing:
-            other_columns = list(self.data.columns.drop(column))  # All columns except the current one
-            formula = f"{column} ~ " + " + ".join(other_columns)
-
-            # Create and fit MI model for the specified formula
-            mi_model = sm.MI(imp, sm.OLS)
-            mi_model.update(10)  # Perform updates across 10 iterations
-            mi_models.append(mi_model)
-
-        # Retrieve imputed data after Bayesian updating steps
-        imputed_data = imp.data_filled()  # Method to retrieve imputed data may differ
-
         return imputed_data
 
     def feature_combinations(self):

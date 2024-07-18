@@ -45,8 +45,8 @@ class XeroCompare:
 
         self.data = test_data
 
-    def compare(self, mice=False):
-        if mice:
+    def compare(self, run_mice=False):
+        if run_mice:
             methods = {
                 'mean': mean_imputation(self.data),
                 'median': median_imputation(self.data),
@@ -130,40 +130,49 @@ def knn_imputation(data):
     return df
 
 
-def iterative_imputation(data, max_iter=10, plot_convergence=False):
-    imputer = impute.IterativeImputer(max_iter=max_iter, random_state=0, sample_posterior=plot_convergence)
+def iterative_imputation(data, max_iter=25):
+    min_value = np.min(np.min(data, axis=0))
+    max_value = np.max(np.max(data, axis=0))
+    imputer = impute.IterativeImputer(max_iter=max_iter, random_state=0,
+                                      min_value=min_value, max_value=max_value)
     imputed = imputer.fit_transform(data)
     df = pd.DataFrame(imputed, index=data.index, columns=data.columns)
     return df
 
 
-def random_forest_imputation(data, max_iter=10, plot_convergence=False):
-    imputer = impute.IterativeImputer(estimator=RandomForestRegressor(), max_iter=max_iter, random_state=0,
-                                      sample_posterior=plot_convergence)
+def random_forest_imputation(data):
+    min_value = np.min(np.min(data, axis=0))
+    max_value = np.max(np.max(data, axis=0))
+    imputer = impute.IterativeImputer(estimator=RandomForestRegressor(n_jobs=-1), max_iter=25, random_state=0,
+                                      min_value=min_value, max_value=max_value)
     imputed = imputer.fit_transform(data)
     df = pd.DataFrame(imputed, index=data.index, columns=data.columns)
     return df
 
 
-def lasso_cv_imputation(data, max_iter=10, plot_convergence=False):
-    imputer = impute.IterativeImputer(estimator=LassoCV(max_iter=100000), max_iter=max_iter, random_state=0,
-                                      sample_posterior=plot_convergence)
+def lasso_cv_imputation(data):
+    min_value = np.min(np.min(data, axis=0))
+    max_value = np.max(np.max(data, axis=0))
+    imputer = impute.IterativeImputer(estimator=LassoCV(max_iter=100000, n_jobs=-1), max_iter=1000, random_state=0,
+                                      min_value=min_value, max_value=max_value)
     imputed = imputer.fit_transform(data)
     df = pd.DataFrame(imputed, index=data.index, columns=data.columns)
     return df
 
 
-def xgboost_imputation(data, max_iter=10, plot_convergence=False):
-    imputer = impute.IterativeImputer(estimator=XGBRegressor(), max_iter=max_iter, random_state=0,
-                                      sample_posterior=plot_convergence)
+def xgboost_imputation(data):
+    min_value = np.min(np.min(data, axis=0))
+    max_value = np.max(np.max(data, axis=0))
+    imputer = impute.IterativeImputer(estimator=XGBRegressor(n_jobs=-1), max_iter=100, random_state=0,
+                                      min_value=min_value, max_value=max_value)
     imputed = imputer.fit_transform(data)
     df = pd.DataFrame(imputed, index=data.index, columns=data.columns)
     return df
 
 
 def xputer_imputation(data):
-    imputer = Xpute(impute_zeros=False, pre_imputation='MixType', xgb_models=3, mf_for_xgb=False,
-                    use_transformed_df=False, optuna_for_xgb=False, optuna_n_trials=50, n_iterations=3,
+    imputer = Xpute(impute_zeros=False, pre_imputation='MixType', xgb_models=3, mf_for_xgb=True,
+                    use_transformed_df=False, optuna_for_xgb=True, optuna_n_trials=50, n_iterations=3,
                     save_imputed_df=False, save_plots=False, test_mode=False)
     df = imputer.fit(data)
     return df
@@ -182,6 +191,7 @@ def mice_imp(data):
         formula = f"{column} ~ " + " + ".join(other_columns)
         mi_model = mice.MICE(formula, sm.OLS, mice_data)
         mi_results = mi_model.fit(10, 10)  # Using 10 imputations with 10 iterations each
+        print(mi_results)
 
     # Retrieve imputed data
     imputed_data = mice_data.data
