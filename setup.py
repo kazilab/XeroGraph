@@ -30,7 +30,7 @@ except FileNotFoundError:
 # Main setup configuration
 setup(
     name='XeroGraph',
-    version='0.0.3',
+    version='0.0.4',
     author='Julhash Kazi',
     author_email='XeroGraph@kazilab.se',
     url='https://www.kazilab.se',
@@ -44,7 +44,7 @@ setup(
         'scipy==1.13.0',
         'matplotlib==3.8.2',
         'statsmodels==0.14.0',
-        'scikit-learn==1.4.1',
+        'scikit-learn==1.4.2',
         'xgboost==1.7.6',
         'seaborn==0.13.1',
         'torch==2.1.2',
