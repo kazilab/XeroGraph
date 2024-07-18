@@ -1,7 +1,7 @@
 # XeroGraph
 
 ## Description
-XeroGraph is a powerful Python package developed for researchers and data scientists to analyze and visualize missing data in datasets. It incorporates Little's MCAR test, among other statistical tools, to help users understand the mechanisms behind missing data. This package is particularly optimized for small to medium-sized datasets and offers extensive visualization options to elucidate data characteristics and integrity.
+XeroGraph is a Python package developed for researchers and data scientists to analyze and visualize missing data in datasets. It incorporates Little's MCAR test, among other statistical tools, to help users understand the mechanisms behind missing data. This package is particularly optimized for small to medium-sized datasets and offers extensive visualization options to elucidate data characteristics and integrity.
 
 ## Key Features
 - **Little's MCAR Test**: Determines if the missing data in a dataset is missing completely at random.
@@ -22,6 +22,12 @@ Ensure you have Python 3.9 or later installed. XeroGraph depends on the followin
 - statsmodels
 - scikit-learn
 - xgboost
+- seaborn
+- torch
+- nimfa
+- optuna
+- tqdm
+- ipywidgets
 
 These dependencies will be automatically installed during XeroGraph's installation process.
 
@@ -46,7 +52,7 @@ xeroenv\Scripts\activate
 ### Installing XeroGraph
 #### You can install XeroGraph directly from PyPI using pip:
 ```bash
-pip install xerograph
+pip install XeroGraph
 ```
 
 #### Alternatively, if you have access to the source code, navigate to the root directory of the source code and run:
@@ -56,12 +62,14 @@ python setup.py install
 
 ## Getting Started
 ### Quick Example
-Here's a quick example to get you started with performing Little's MCAR test and visualizing the data:
+Here's a quick example to get you started with performing Little's MCAR test, visualizing the data and imputation.
+We use XeroAnalyzer application provided in XeroGraph.
 ```bash
-from xerograph import xg
+# XeroAnalyzer can be imported as XA, xa, xeroanalyzer, xero_analyzer or XeroAnalyzer
+from XeroGraph import xa
 import pandas as pd
 ```
-#### Example dataset
+#### Example data
 ```bash
 data = pd.DataFrame({
     'feature1': [1, 2, 3, 4, 5, 6, 7, 8, 9, 3, 4, None, 6, 4, 5, 1, 2, 3, 4, 5, 6, 7, 8, 9, 3, 4, 1, 6, 4, 5],
@@ -76,9 +84,8 @@ print(data.shape)
 #### Initialize the XeroGraph analyzer
 ```bash
 # Optional arguments:
-# To save plot: "save_plot=True, save_path=save path"
-# Used for multiple imputation: "max_iter=10"
-xg_test = xg(df, save_files=True, max_iter=10)
+# To save plot: save_plot=True, save_path='save path'
+xg_test = xa(data, save_files=False, save_path="")
 ```
 #### Perform normality test for each features
 ```bash
@@ -137,19 +144,19 @@ imp_data_knn = xg_test.knn_imputation()
 ```
 #### Iterative Imputation
 ```bash
-imp_data_ii = xg_test.iterative_imputation() # Optional: plot_convergence=True 
+imp_data_ii = xg_test.iterative_imputation(plot_convergence=False) # Optional: plot_convergence=True 
 ```
 #### Imputation by Random Forest
 ```bash
-imp_data_rf = xg_test.random_forest_imputation() # Optional: plot_convergence=True 
+imp_data_rf = xg_test.random_forest_imputation() 
 ```
 #### Imputation by LASSO CV
 ```bash
-imp_data_lc = xg_test.lasso_cv_imputation() # Optional: plot_convergence=True 
+imp_data_lc = xg_test.lasso_cv_imputation()
 ```
 #### Imputation by XGBoost
 ```bash
-imp_data_xb = xg_test.xgboost_imputation() # Optional: plot_convergence=True 
+imp_data_xb = xg_test.xgboost_imputation()
 ```
 #### Imputation by Xputer
 ```bash
@@ -168,17 +175,22 @@ xg_test.check_plausibility(imp_data_rf)
 ```bash
 xg_test.compare_with_ttest_and_plot(imp_data_ii) 
 ```
-## Perform a test to check which imputation method fits for your data
+#### Visualize feature combinations plots for each features
 ```bash
-from xerograph import xc
-compare_imp = xc(data, mice=False) # MICE imputation is a slow process, if you want to include pass "mice=True".
+xg_test.feature_combinations()
+```
+## Perform a test to check which imputation method fits for your data
+We use XeroCompare application provided in XeroGraph to compare different imputation methods.
+For analysis, you may provide a dataset with minimum number of missing value as XeroCompare will remove rows with missing values.
+```bash
+# XeroCompare can be imported as XC, xc, xerocompare, xero_compare or XeroCompare
+from XeroGraph import xc
+# MICE imputation is a slow process, if you want to include pass "run_mice=True".
+compare_imp = xc(data, run_mice=False) 
 summary = compare_imp.compare()
 print(summary) 
 ```
-#### Visualize feature combinations plots for each features
-```bash
-xg_test.feature_combinations() # optional arguments: to save plot "save_plot=True, save_path=save path".
-```
+
 ## Documentation
 For more detailed information on all the features and usage instructions, refer to the full documentation available at (Link to be included).
 
@@ -186,7 +198,7 @@ For more detailed information on all the features and usage instructions, refer 
 Contributions to XeroGraph are welcome! Please refer to the CONTRIBUTING.md file for guidelines on how to make a contribution, including bug fixes, adding new features, and improving the documentation.
 
 ## License
-XeroGraph is released under the MIT License. For more details, see the LICENSE file included with the source code.
+XeroGraph is released under the Apache License 2.0. For more details, see the LICENSE file included with the source code.
 
 ## Contact
 For help and support, please open an issue in the GitHub repository or contact the development team at XeroGraph@kazilab.se.
