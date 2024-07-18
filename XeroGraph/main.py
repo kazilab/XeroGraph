@@ -305,7 +305,7 @@ class XeroAnalyzer:
         normality_results = {}
 
         for col in self.data.columns:
-            stat, p = shapiro(self.data[col])
+            stat, p = shapiro(self.data[col].dropna())
             normality_results[col] = {'Statistics': stat, 'p-value': p}
 
         # Display results
@@ -320,7 +320,7 @@ class XeroAnalyzer:
     def ks(self):
         # Kolmogorov-Smirnov test assuming normal distribution
         for col in self.data.columns:
-            stat, p = kstest(self.data[col], 'norm', args=(self.data[col].mean(), self.data[col].std()))
+            stat, p = kstest(self.data[col].dropna(), 'norm', args=(self.data[col].dropna().mean(), self.data[col].dropna().std()))
             print(f'{col}: Statistics=%.3f, p=%.3f' % (stat, p))
             # Interpret results
             alpha = 0.05
