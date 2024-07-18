@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Setting Up a Virtual Environment &#8212; XeroGraph 0.0.5 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=12dfc556" />
+    <script src="_static/documentation_options.js?v=282f96c0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="XeroGraph documentation" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="setting-up-a-virtual-environment">
+<h1>Setting Up a Virtual Environment<a class="headerlink" href="#setting-up-a-virtual-environment" title="Link to this heading">¶</a></h1>
+<p>It is recommended to install XeroGraph within a virtual environment to manage dependencies effectively:</p>
+<section id="create-a-virtual-environment">
+<h2>Create a virtual environment<a class="headerlink" href="#create-a-virtual-environment" title="Link to this heading">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>xeroenv
+</pre></div>
+</div>
+</section>
+<section id="activate-the-virtual-environment">
+<h2>Activate the virtual environment<a class="headerlink" href="#activate-the-virtual-environment" title="Link to this heading">¶</a></h2>
+<p>On Linux/Mac:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>xeroenv/bin/activate
+</pre></div>
+</div>
+<p>On Windows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>xeroenv<span class="se">\\</span>Scripts<span class="se">\\</span>activate
+</pre></div>
+</div>
+<section id="installing-xerograph">
+<h3>Installing XeroGraph<a class="headerlink" href="#installing-xerograph" title="Link to this heading">¶</a></h3>
+<p>You can install XeroGraph directly from PyPI using pip:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>XeroGraph
+</pre></div>
+</div>
+<p>Alternatively, if you have access to the source code, navigate to the root directory of the source code and run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>setup.py<span class="w"> </span>install
+</pre></div>
+</div>
+</section>
+<section id="getting-started">
+<h3>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading">¶</a></h3>
+</section>
+</section>
+<section id="quick-example">
+<h2>Quick Example<a class="headerlink" href="#quick-example" title="Link to this heading">¶</a></h2>
+<p>Here’s a quick example to get you started with performing Little’s MCAR test, visualizing the data and imputation. We use XeroAnalyzer application provided in XeroGraph.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># XeroAnalyzer can be imported as XA, xa, xeroanalyzer, xero_analyzer or XeroAnalyzer</span>
+<span class="kn">from</span> <span class="nn">XeroGraph</span> <span class="kn">import</span> <span class="n">xa</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+</pre></div>
+</div>
+<p>Example data:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;feature1&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
+    <span class="s1">&#39;feature2&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span>
+    <span class="s1">&#39;feature3&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+    <span class="s1">&#39;feature4&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+    <span class="s1">&#39;feature5&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+<span class="p">})</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Initialize the XeroGraph analyzer:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Optional arguments:</span>
+<span class="c1"># To save plot: save_plot=True, save_path=&#39;save path&#39;</span>
+<span class="n">xg_test</span> <span class="o">=</span> <span class="n">xa</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">save_files</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Perform normality test for each features:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">xg_test</span><span class="o">.</span><span class="n">normality</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Visualize various statistical plots and perform imputation:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">xg_test</span><span class="o">.</span><span class="n">ks</span><span class="p">()</span>
+<span class="n">xg_test</span><span class="o">.</span><span class="n">histograms</span><span class="p">()</span>
+<span class="n">xg_test</span><span class="o">.</span><span class="n">density_plots</span><span class="p">()</span>
+<span class="n">xg_test</span><span class="o">.</span><span class="n">box_plots</span><span class="p">()</span>
+<span class="n">xg_test</span><span class="o">.</span><span class="n">qq_plots</span><span class="p">()</span>
+<span class="n">xg_test</span><span class="o">.</span><span class="n">missing_data</span><span class="p">()</span>
+<span class="n">xg_test</span><span class="o">.</span><span class="n">missing_percentage</span><span class="p">()</span>
+<span class="n">mcar_result</span> <span class="o">=</span> <span class="n">xg_test</span><span class="o">.</span><span class="n">mcar</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;MCAR Test Result: </span><span class="si">{</span><span class="n">mcar_result</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Imputation methods demonstrated:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">imp_data_mean</span> <span class="o">=</span> <span class="n">xg_test</span><span class="o">.</span><span class="n">mean_imputation</span><span class="p">()</span>
+<span class="n">imp_data_median</span> <span class="o">=</span> <span class="n">xg_test</span><span class="o">.</span><span class="n">median_imputation</span><span class="p">()</span>
+<span class="n">imp_data_most_frequent</span> <span class="o">=</span> <span class="n">xg_test</span><span class="o">.</span><span class="n">most_frequent_imputation</span><span class="p">()</span>
+<span class="n">imp_data_knn</span> <span class="o">=</span> <span class="n">xg_test</span><span class="o">.</span><span class="n">knn_imputation</span><span class="p">()</span>
+<span class="n">imp_data_ii</span> <span class="o">=</span> <span class="n">xg_test</span><span class="o">.</span><span class="n">iterative_imputation</span><span class="p">(</span><span class="n">plot_convergence</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">imp_data_rf</span> <span class="o">=</span> <span class="n">xg_test</span><span class="o">.</span><span class="n">random_forest_imputation</span><span class="p">()</span>
+<span class="n">imp_data_lc</span> <span class="o">=</span> <span class="n">xg_test</span><span class="o">.</span><span class="n">lasso_cv_imputation</span><span class="p">()</span>
+<span class="n">imp_data_xb</span> <span class="o">=</span> <span class="n">xg_test</span><span class="o">.</span><span class="n">xgboost_imputation</span><span class="p">()</span>
+<span class="n">imp_data_xp</span> <span class="o">=</span> <span class="n">xg_test</span><span class="o">.</span><span class="n">xputer_imputation</span><span class="p">()</span>
+<span class="n">imp_data_mice</span> <span class="o">=</span> <span class="n">xg_test</span><span class="o">.</span><span class="n">mice_imp</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Check after imputation and perform comparisons:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">xg_test</span><span class="o">.</span><span class="n">check_plausibility</span><span class="p">(</span><span class="n">imp_data_rf</span><span class="p">)</span>
+<span class="n">xg_test</span><span class="o">.</span><span class="n">compare_with_ttest_and_plot</span><span class="p">(</span><span class="n">imp_data_ii</span><span class="p">)</span>
+<span class="n">xg_test</span><span class="o">.</span><span class="n">feature_combinations</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Comparison with XeroCompare:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">XeroGraph</span> <span class="kn">import</span> <span class="n">xc</span>
+<span class="c1"># MICE imputation is a slow process, if you want to include pass &quot;run_mice=True&quot;.</span>
+<span class="n">compare_imp</span> <span class="o">=</span> <span class="n">xc</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">run_mice</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">summary</span> <span class="o">=</span> <span class="n">compare_imp</span><span class="o">.</span><span class="n">compare</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">summary</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">XeroGraph</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Setting Up a Virtual Environment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#create-a-virtual-environment">Create a virtual environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#activate-the-virtual-environment">Activate the virtual environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#quick-example">Quick Example</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">XeroGraph documentation</a></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024, Julhash Kazi.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.4.6</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="_sources/usage.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
