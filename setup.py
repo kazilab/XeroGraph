@@ -30,7 +30,7 @@ except FileNotFoundError:
 # Main setup configuration
 setup(
     name='XeroGraph',
-    version='0.0.4',
+    version='0.0.5',
     author='Julhash Kazi',
     author_email='XeroGraph@kazilab.se',
     url='https://www.kazilab.se',
