@@ -177,7 +177,10 @@ class XeroAnalyzer:
 
         # Loop through all columns and create a histogram in each subplot
         for i, col in enumerate(self.data.columns):
-            axes[i].hist(self.data[col], bins=freedman_diaconis(self.data[col]), color='blue', alpha=0.7)
+            bins=freedman_diaconis(self.data[col])
+            if bins < 30:
+                bins = 30
+            axes[i].hist(self.data[col], bins=bins, color='blue', alpha=0.5)
             axes[i].set_title(col)
             axes[i].set_xlabel('Value')
             axes[i].set_ylabel('Frequency')
