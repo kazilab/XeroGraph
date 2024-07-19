@@ -68,62 +68,74 @@ The `Kolmogorov-Smirnov (KS) test <https://docs.scipy.org/doc/scipy/reference/ge
 
     xg_test.ks()
 
-The "ks()" compares the sample with a normal distribution and returns two values:
+The "ks()" function compares the sample with a normal distribution and returns two values:
     (1) statistic: This is the KS statistic, which quantifies the maximum distance between the empirical distribution function of the sample and the cumulative distribution function of the specified normal distribution. A larger KS statistic indicates a greater divergence between the two distributions.
     (2) p-value: This is the p-value, which tells you the probability of observing a test statistic at least as extreme as the one observed under the null hypothesis, which states that the sample comes from the specified distribution. A small p-value (typically less than 0.05) leads to rejection of the null hypothesis, suggesting that the data do not follow a normal distribution.
 
-Interpretation of "ks()" test results
+Interpretation of results
     (1) If the p-value is small (commonly less than 0.05): Reject the null hypothesis, suggesting significant evidence that the data do not follow a normal distribution.
     (2) If the p-value is large: It fails to reject the null hypothesis, indicating insufficient evidence to conclude that the data do not follow a normal distribution.
 
 
 Visualize histograms for each feature
 -------------------------------------
-Histograms provide a visual representation of how data points are distributed across different intervals or "bins". We applied "Freedman-Diaconis" rule to determine the bins. Visualizing histograms for each feature can provide various information including:
-    (1) Detect skewness: Histograms can identify if data for a particular feature are skewed to the left or right.
-    (2) Identify modality: Histograms help in recognizing if data are unimodal (one peak), bimodal (two peaks), or multimodal (multiple peaks), which can influence the selection of appropriate statistical tests or data preprocessing techniques.
-    (3) Outliers: Histograms make it easier to spot outliers which appear as bars isolated from the bulk of the data. Outliers can be the result of data entry errors, measurement errors, or actual variability in data, and may significantly affect the results of statistical analyses and predictive models.
-    (4) Anomalies: Unusual patterns, such as unexpected spikes in a histogram, can indicate data issues or important insights into dataset characteristics.
+Histograms provide a visual representation of how data points are distributed across different intervals or "bins". We applied "Freedman-Diaconis" rule to determine the bins.
 
 .. code-block:: python
 
     xg_test.histograms()
 
+
+Key benefits:
+    (1) Detect skewness: Histograms can identify if data for a particular feature are skewed to the left or right.
+    (2) Identify modality: Histograms help in recognizing if data are unimodal (one peak), bimodal (two peaks), or multimodal (multiple peaks), which can influence the selection of appropriate statistical tests or data preprocessing techniques.
+    (3) Outliers: Histograms make it easier to spot outliers which appear as bars isolated from the bulk of the data. Outliers can be the result of data entry errors, measurement errors, or actual variability in data, and may significantly affect the results of statistical analyses and predictive models.
+    (4) Anomalies: Unusual patterns, such as unexpected spikes in a histogram, can indicate data issues or important insights into dataset characteristics.
+
+
 Visualize density plots for each feature
 ----------------------------------------
 Density plots are smoothed, continuous versions of histograms and are useful for visualizing the underlying distribution of the data without being tied to the choice of bins.
-    (1) Smooth representation: Unlike histograms, density plots provide a smooth curve representing the distribution, which can help in identifying the shape of the distribution more clearly (e.g., bimodal, normal, skewed).
-    (2) Comparison of distributions: They are particularly useful when you need to compare the distribution of data across different groups or conditions within the same plot.
-    (3) Handling overlap: Density plots can handle overlap better than histograms by showing peaks where data are concentrated, even if multiple groups are plotted together.
 
 .. code-block:: python
 
     xg_test.density_plots()
 
+
+Key benefits:
+    (1) Smooth representation: Unlike histograms, density plots provide a smooth curve representing the distribution, which can help in identifying the shape of the distribution more clearly (e.g., bimodal, normal, skewed).
+    (2) Comparison of distributions: They are particularly useful when you need to compare the distribution of data across different groups or conditions within the same plot.
+    (3) Handling overlap: Density plots can handle overlap better than histograms by showing peaks where data are concentrated, even if multiple groups are plotted together.
+
+
 Visualize box plots for each feature
 ------------------------------------
 Box plots, also known as box-and-whisker plots, provide a concise and informative summary of the distribution of data across its quartiles and are particularly useful for identifying outliers, median, and data variability.
-
-Key Benefits of Box Plots
-    (1) Five-Number Summary: Each box plot provides a visual representation of the minimum, first quartile (Q1), median (second quartile, Q2), third quartile (Q3), and maximum of a dataset. This five-number summary is crucial for quickly understanding the central tendency and dispersion of the data.
-    (2) Detection of Outliers: Box plots make it easy to identify outliers as points that appear outside of the whiskers, which typically extend 1.5 times the interquartile range (IQR) from the quartiles. This feature is especially useful for deciding whether to exclude outliers from further analyses or for understanding the spread and tails of the distribution.
 
 .. code-block:: python
 
     xg_test.box_plots()
 
+
+Key benefits:
+    (1) Five-Number Summary: Each box plot provides a visual representation of the minimum, first quartile (Q1), median (second quartile, Q2), third quartile (Q3), and maximum of a dataset. This five-number summary is crucial for quickly understanding the central tendency and dispersion of the data.
+    (2) Detection of Outliers: Box plots make it easy to identify outliers as points that appear outside of the whiskers, which typically extend 1.5 times the interquartile range (IQR) from the quartiles. This feature is especially useful for deciding whether to exclude outliers from further analyses or for understanding the spread and tails of the distribution.
+
+
 Visualize Q-Q plots for each feature
 ------------------------------------
 Q-Q (quantile-quantile) plot for each feature in a dataset is a highly effective method for assessing whether the distribution of the data conforms to a theoretical distribution, typically the normal distribution.
 
-Key Benefits of Q-Q Plots:
+.. code-block:: python
+
+    xg_test.qq_plots()
+
+
+Key benefits:
     (1) Visual inspection of normal distribution: A Q-Q plot provides a visual means to assess the normality of data. If the data points (quantiles of the sample data) fall approximately along a straight line, the sample can be considered normally distributed. Deviations from this line indicate departures from normality.
     (2) Sensitivity to deviations: Q-Q plots are particularly sensitive to deviations in the tails of the distribution, making them superior to other techniques like histograms or box plots for detecting outliers and skewness.
     (3) Identifying Outliers: Points that deviate significantly from the reference line in a Q-Q plot can indicate potential outliers, especially those in the tails.
 
-.. code-block:: python
-
-    xg_test.qq_plots()
 
 Visualize missing data patterns
 -------------------------------
