@@ -41,6 +41,10 @@ Initialize the XeroGraph analyzer
 
 Perform normality test for each feature
 ---------------------------------------
+Perform the Shapiro-Wilk test for normality.
+The Shapiro-Wilk test tests the null hypothesis that the data was drawn from a normal distribution.
+`Shapiro-Wilk test <https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.shapiro.html>`_
+
 
 .. code-block:: python
 
