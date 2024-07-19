@@ -177,7 +177,7 @@ class XeroAnalyzer:
 
         # Loop through all columns and create a histogram in each subplot
         for i, col in enumerate(self.data.columns):
-            bins=freedman_diaconis(self.data[col])
+            bins=freedman_diaconis(self.data[col].dropna())
             if bins < 30:
                 bins = 30
             axes[i].hist(self.data[col], bins=bins, color='blue', alpha=0.5)
