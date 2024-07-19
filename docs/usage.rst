@@ -51,21 +51,31 @@ The "normality()" function returns two values:
     (1) W statistic: This is the test statistic for the Shapiro-Wilk test. It quantifies how much the sample distribution deviates from a normal     distribution.
     (2) p-value: This value helps determine whether to reject the null hypothesis. The null hypothesis for the Shapiro-Wilk test states that the data are drawn from a normal distribution.
 
-Interpreting the "normality()" Test
-    W Statistic: A value close to 1 indicates that the data are more likely to be normally distributed. Values significantly lower than 1 suggest deviations from normality.
-    P-value: If the p-value is less than the chosen alpha level (commonly set at 0.05), then you reject the null hypothesis, suggesting that the data do not come from a normal distribution. If the p-value is greater than or equal to the alpha level, you fail to reject the null hypothesis, indicating no evidence to suggest the data are not from a normal distribution.
+Interpreting the "normality()" test:
+    (1) W Statistic: A value close to 1 indicates that the data are more likely to be normally distributed. Values significantly lower than 1 suggest deviations from normality.
+    (2) P-value: If the p-value is less than the chosen alpha level (commonly set at 0.05), then you reject the null hypothesis, suggesting that the data do not come from a normal distribution. If the p-value is greater than or equal to the alpha level, you fail to reject the null hypothesis, indicating no evidence to suggest the data are not from a normal distribution.
 
 Practical Considerations
-    Sample Size: The Shapiro-Wilk test is considered reliable for sample sizes less than 2,000. For very large datasets, the test might be too sensitive, detecting small deviations from normality that are not practically significant.
-    Usage: While the Shapiro-Wilk test provides a formal statistical assessment of normality, it's often recommended to also look at graphical assessments like QQ-plots or histograms to visually assess the distribution.
+    (1) Sample Size: The Shapiro-Wilk test is considered reliable for sample sizes less than 2,000. For very large datasets, the test might be too sensitive, detecting small deviations from normality that are not practically significant.
+    (2) Usage: While the Shapiro-Wilk test provides a formal statistical assessment of normality, it's often recommended to also look at graphical assessments like QQ-plots or histograms to visually assess the distribution.
 
 
-Perform Kolmogorov-Smirnov test for each feature
+Perform the Kolmogorov-Smirnov test for each feature
 ------------------------------------------------
+The `Kolmogorov-Smirnov (KS) test <https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.kstest.html#scipy.stats.kstest>`_ is a non-parametric test used to determine if a sample comes from a population with a specific distribution. It compares the empirical distribution function (EDF) of the sample with the cumulative distribution function (CDF) of the specified theoretical distribution, and it provides a test statistic that measures the largest discrepancy between them. The test is useful for comparing a sample with a reference probability distribution, or comparing two samples to check if they come from the same distribution.
 
 .. code-block:: python
 
     xg_test.ks()
+
+The "ks()" compares the sample with a normal distribution and returns two values:
+    (1) statistic: This is the KS statistic, which quantifies the maximum distance between the empirical distribution function of the sample and the cumulative distribution function of the specified normal distribution. A larger KS statistic indicates a greater divergence between the two distributions.
+    (2) p-value: This is the p-value, which tells you the probability of observing a test statistic at least as extreme as the one observed under the null hypothesis, which states that the sample comes from the specified distribution. A small p-value (typically less than 0.05) leads to rejection of the null hypothesis, suggesting that the data do not follow a normal distribution.
+
+Interpretation of "ks()" test results
+    (1) If the p-value is small (commonly less than 0.05): Reject the null hypothesis, suggesting significant evidence that the data do not follow a normal distribution.
+    (2) If the p-value is large: It fails to reject the null hypothesis, indicating insufficient evidence to conclude that the data do not follow a normal distribution.
+
 
 Visualize histograms for each feature
 -------------------------------------
