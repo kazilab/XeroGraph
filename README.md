@@ -182,6 +182,15 @@ xg_test.feature_combinations()
 ## Perform a test to check which imputation method fits for your data
 We use XeroCompare application provided in XeroGraph to compare different imputation methods.
 For analysis, you may provide a dataset with minimum number of missing value as XeroCompare will remove rows with missing values.
+
+#### Run with XeroAnalyzer
+```bash
+# MICE imputation is a slow process, if you want to include pass "run_mice=True".
+summary = xg_test.compare_imputers(run_mice=False)()
+print(summary) 
+```
+
+#### Run independently as XeroCompare
 ```bash
 # XeroCompare can be imported as XC, xc, xerocompare, xero_compare or XeroCompare
 from XeroGraph import xc
@@ -192,7 +201,7 @@ print(summary)
 ```
 
 ## Documentation
-For more detailed information on all the features and usage instructions, refer to the full documentation available at (Link to be included).
+For more detailed information on all the features and usage instructions, refer to the full documentation available at ReadTheDoc(https://xerograph.readthedocs.io).
 
 ## Contributing
 Contributions to XeroGraph are welcome! Please refer to the CONTRIBUTING.md file for guidelines on how to make a contribution, including bug fixes, adding new features, and improving the documentation.
