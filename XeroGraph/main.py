@@ -321,6 +321,7 @@ class XeroAnalyzer:
         # Kolmogorov-Smirnov test assuming normal distribution
         for col in self.data.columns:
             stat, p = kstest(self.data[col].dropna(), 'norm', args=(self.data[col].dropna().mean(), self.data[col].dropna().std()))
+            # 'norm' indicates that the sample data is being compared to a normal (Gaussian) distribution.
             print(f'{col}: Statistics=%.3f, p=%.3f' % (stat, p))
             # Interpret results
             alpha = 0.05
