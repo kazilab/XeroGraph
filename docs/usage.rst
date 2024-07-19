@@ -24,7 +24,7 @@ On Windows:
 
 .. code-block:: bash
 
-    xeroenv\\Scripts\\activate
+    xeroenv\Scripts\activate
 
 ====================
 Installing XeroGraph
@@ -47,21 +47,22 @@ Getting Started
 ===============
 
 How to use
-============
+==========
 
-Here's a quick example to get you started with performing Little's MCAR test, visualizing the data and imputation. We use XeroAnalyzer application provided in XeroGraph.
+Here's a quick example to get you started with performing Little's MCAR test, visualizing the data, and imputation. We use the XeroAnalyzer application provided in XeroGraph.
 
 Importing XeroAnalyzer
 -----------------------
 
 .. code-block:: python
 
-    # XeroAnalyzer can be imported as XA, xa, xeroanalyzer, xero_analyzer or XeroAnalyzer
+    # XeroAnalyzer can be imported as XA, xa, xeroanalyzer, xero_analyzer, or XeroAnalyzer
     from XeroGraph import xa
     import pandas as pd
 
-Example data:
---------------
+Example data
+------------
+
 .. code-block:: python
 
     data = pd.DataFrame({
@@ -73,76 +74,87 @@ Example data:
     })
     print(data.shape)
 
-Initialize the XeroGraph analyzer:
--------------------------------------
+Initialize the XeroGraph analyzer
+---------------------------------
+
 .. code-block:: python
 
     # Optional arguments:
     # To save plot: save_plot=True, save_path='save path'
     xg_test = xa(data, save_files=False, save_path="")
 
-Perform normality test for each feature:
--------------------------------------------
+Perform normality test for each feature
+---------------------------------------
+
 .. code-block:: python
 
     xg_test.normality()
 
-Perform Kolmogorov-Smirnov test for each feature:
----------------------------------------------------
+Perform Kolmogorov-Smirnov test for each feature
+------------------------------------------------
+
 .. code-block:: python
 
     xg_test.ks()
 
 Visualize histograms for each feature
------------------------------------------
+-------------------------------------
+
 .. code-block:: python
 
     xg_test.histograms()
 
 Visualize density plots for each feature
------------------------------------------
+----------------------------------------
+
 .. code-block:: python
 
     xg_test.density_plots()
 
 Visualize box plots for each feature
---------------------------------------
+------------------------------------
+
 .. code-block:: python
 
     xg_test.box_plots()
 
 Visualize Q-Q plots for each feature
---------------------------------------
+------------------------------------
+
 .. code-block:: python
 
     xg_test.qq_plots()
 
 Visualize missing data patterns
---------------------------------------
+-------------------------------
+
 .. code-block:: python
 
     xg_test.missing_data()
 
 Visualize missing percentages for both features and samples
--------------------------------------------------------------
+-----------------------------------------------------------
+
 .. code-block:: python
 
     xg_test.missing_percentage()
 
 Perform Little's MCAR test
----------------------------
+--------------------------
+
 .. code-block:: python
 
     mcar_result = xg_test.mcar()
     print(f"MCAR Test Result: {mcar_result}")
-   
 
 Imputation methods
-===================
+==================
+
 Perform imputation of continuous data
 
 Mean Imputation
------------------
+---------------
+
 .. code-block:: python
 
     imp_data_mean = xg_test.mean_imputation()
@@ -150,23 +162,26 @@ Mean Imputation
     imp_data_mean.to_csv('mean_imputed_data.csv')
 
 Median Imputation
-------------------
+-----------------
+
 .. code-block:: python
 
     imp_data_median = xg_test.median_imputation()
     # to export data as CSV
     imp_data_median.to_csv('median_imputed_data.csv')
 
-Most Frequent
---------------
+Most Frequent Imputation
+------------------------
+
 .. code-block:: python
 
     imp_data_most_frequent = xg_test.most_frequent_imputation()
     # to export data as CSV
     imp_data_most_frequent.to_csv('most_frequent_imputed_data.csv')
 
-KNN imputation
-----------------
+KNN Imputation
+--------------
+
 .. code-block:: python
 
     imp_data_knn = xg_test.knn_imputation()
@@ -174,7 +189,8 @@ KNN imputation
     imp_data_knn.to_csv('KNN_imputed_data.csv')
 
 Iterative Imputation
----------------------
+--------------------
+
 .. code-block:: python
 
     imp_data_ii = xg_test.iterative_imputation(plot_convergence=False)
@@ -183,6 +199,7 @@ Iterative Imputation
 
 Imputation by Random Forest
 ---------------------------
+
 .. code-block:: python
 
     imp_data_rf = xg_test.random_forest_imputation()
@@ -190,7 +207,8 @@ Imputation by Random Forest
     imp_data_rf.to_csv('RandomForest_imputed_data.csv')
 
 Imputation by LASSO CV
----------------------------
+----------------------
+
 .. code-block:: python
 
     imp_data_lc = xg_test.lasso_cv_imputation()
@@ -198,7 +216,8 @@ Imputation by LASSO CV
     imp_data_lc.to_csv('LASSOCV_imputed_data.csv')
 
 Imputation by XGBoost
-----------------------
+---------------------
+
 .. code-block:: python
 
     imp_data_xb = xg_test.xgboost_imputation()
@@ -206,7 +225,8 @@ Imputation by XGBoost
     imp_data_xb.to_csv('XGBoost_imputed_data.csv')
 
 Imputation by Xputer
----------------------
+--------------------
+
 .. code-block:: python
 
     imp_data_xp = xg_test.xputer_imputation()
@@ -215,40 +235,41 @@ Imputation by Xputer
 
 Multiple Imputation by MICE
 ---------------------------
+
 .. code-block:: python
 
     imp_data_mice = xg_test.mice_imp()
     # to export data as CSV
     imp_data_mice.to_csv('MICE_imputed_data.csv')
 
-
-Check after imputation and perform comparisons:
-===============================================
+Check after imputation and perform comparisons
+==============================================
 
 Check Plausibility
--------------------
+------------------
+
 .. code-block:: python
 
     xg_test.check_plausibility(imp_data_rf)
 
-
 Compare with T-test and plot
-------------------------------
+----------------------------
+
 .. code-block:: python
 
     xg_test.compare_with_ttest_and_plot(imp_data_ii)
 
-
 Visualize feature combination plots for each feature pair
 ---------------------------------------------------------
+
 .. code-block:: python
 
     xg_test.feature_combinations()
 
-Comparison with XeroCompare:
-=============================
-Perform a test to check which imputation method fits your data
-We use XeroCompare application provided in XeroGraph to compare different imputation methods. For analysis, you may provide a dataset with the minimum number of missing values as XeroCompare will remove rows with missing values.
+Comparison with XeroCompare
+===========================
+
+Perform a test to check which imputation method fits your data. We use the XeroCompare application provided in XeroGraph to compare different imputation methods. For analysis, you may provide a dataset with the minimum number of missing values as XeroCompare will remove rows with missing values.
 
 .. code-block:: python
 
