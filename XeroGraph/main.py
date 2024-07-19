@@ -15,6 +15,7 @@ from statsmodels.imputation import mice
 import statsmodels.api as sm
 from .xputer_main import Xpute
 from .utils import freedman_diaconis
+from .compare import XeroCompare
 
 
 class XeroAnalyzer:
@@ -607,3 +608,11 @@ class XeroAnalyzer:
 
         # Show the plot
         plt.show()
+
+
+    def compare_imputers(self, run_mice=False):
+        compare_imp = XeroCompare(data)
+        # MICE imputation is a slow process, if you want to include pass "run_mice=True".
+        summary = compare_imp.compare(run_mice=run_mice)
+        return summary
+        
