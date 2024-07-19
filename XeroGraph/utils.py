@@ -1,6 +1,9 @@
 import numpy as np
 
 def freedman_diaconis(data):
+    '''
+    Freedman-Diaconis rule to determine bin size
+    '''
     # Compute the interquartile range
     Q1 = np.percentile(data, 25)
     Q3 = np.percentile(data, 75)
