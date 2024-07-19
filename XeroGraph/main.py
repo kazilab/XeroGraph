@@ -14,6 +14,7 @@ from xgboost import XGBRegressor
 from statsmodels.imputation import mice
 import statsmodels.api as sm
 from .xputer_main import Xpute
+from .utils import freedman_diaconis
 
 
 class XeroAnalyzer:
@@ -175,7 +176,7 @@ class XeroAnalyzer:
 
         # Loop through all columns and create a histogram in each subplot
         for i, col in enumerate(self.data.columns):
-            axes[i].hist(self.data[col], bins=30, color='blue', alpha=0.7)
+            axes[i].hist(self.data[col], bins=freedman_diaconis(self.data[col]), color='blue', alpha=0.7)
             axes[i].set_title(col)
             axes[i].set_xlabel('Value')
             axes[i].set_ylabel('Frequency')
