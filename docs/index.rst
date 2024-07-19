@@ -18,4 +18,7 @@ documentation for details.
    venv
    installation
    usage
-
+   analyzer
+   imputation
+   check
+   compare
