@@ -1,7 +1,8 @@
-
+import warnings
 import numpy as np
 import pandas as pd
 from sklearn.experimental import enable_iterative_imputer
+from sklearn.exceptions import ConvergenceWarning
 from sklearn import impute
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import LassoCV
@@ -11,6 +12,8 @@ import statsmodels.api as sm
 from sklearn.metrics import mean_squared_error
 from scipy.stats import ttest_rel
 from .xputer_main import Xpute
+# Ignore ConvergenceWarning from sklearn
+warnings.filterwarnings("ignore", category=ConvergenceWarning)
 
 
 class XeroCompare:
