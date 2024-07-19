@@ -9,7 +9,11 @@ Here's a quick example to get you started with performing Little's MCAR test, vi
 
 
 Importing XeroAnalyzer
------------------------
+=======================
+
+Import XeroAnalyzer from XeroGraph
+----------------------------------
+XeroGraph allows importing XeroAnalyzer several different names including XA, xa, xeroanalyzer, xero_analyzer, or XeroAnalyzer
 
 .. code-block:: python
 
@@ -19,7 +23,11 @@ Importing XeroAnalyzer
 
 
 Example data
-------------
+============
+
+Create a pandas DataFrame
+-------------------------
+We create an example dataset with missing values. Users must import data as pandas DataFrame. Data should only contain numerical values and missing values without any column with string. 
 
 .. code-block:: python
 
@@ -33,8 +41,12 @@ Example data
     print(data.shape)
 
 
-Initialize the XeroGraph analyzer
----------------------------------
+Initialize the XeroAnalyzer
+===========================
+
+Initialize the XeroAnalyzer to perform analysis
+-----------------------------------------------
+To perform analysis, we first need to initialize XeroAnalyzer. XeroAnalyzer requires a pandas DataFrame that includes numerical values and may contain missing values in any column with strings. Additionally, we can pass "save_plot=True" to save all plots and output data. We should also specify a save location by passing a save path, like so: "save_path='save_path'".
 
 .. code-block:: python
 
@@ -44,7 +56,8 @@ Initialize the XeroGraph analyzer
 
 
 Perform normality test for each feature
----------------------------------------
+=======================================
+
 We applied the `Shapiro-Wilk test <https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.shapiro.html>`_ in the "normality()" function. The Shapiro-Wilk test is a statistical test used to assess the normality of a dataset. It is implemented in Python's "scipy.stats" module through the "shapiro# function.
 
 .. code-block:: python
@@ -65,7 +78,8 @@ Practical Considerations
 
 
 Perform the Kolmogorov-Smirnov test for each feature
-------------------------------------------------
+================================================
+
 The `Kolmogorov-Smirnov (KS) test <https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.kstest.html>`_ is a non-parametric test used to determine if a sample comes from a population with a specific distribution. It compares the empirical distribution function (EDF) of the sample with the cumulative distribution function (CDF) of the specified theoretical distribution, and it provides a test statistic that measures the largest discrepancy between them. The test is useful for comparing a sample with a reference probability distribution or comparing two samples to check if they come from the same distribution.
 
 .. code-block:: python
@@ -82,7 +96,8 @@ Interpretation of results
 
 
 Visualize histograms for each feature
--------------------------------------
+=====================================
+
 Histograms provide a visual representation of how data points are distributed across different intervals or "bins". We applied "Freedman-Diaconis" rule to determine the bins.
 
 .. code-block:: python
@@ -98,7 +113,8 @@ Key benefits:
 
 
 Visualize density plots for each feature
-----------------------------------------
+========================================
+
 Density plots are smoothed, continuous versions of histograms and are useful for visualizing the underlying distribution of the data without being tied to the choice of bins.
 
 .. code-block:: python
@@ -113,7 +129,8 @@ Key benefits:
 
 
 Visualize box plots for each feature
-------------------------------------
+====================================
+
 Box plots, also known as box-and-whisker plots, provide a concise and informative summary of the distribution of data across its quartiles and are particularly useful for identifying outliers, median, and data variability.
 
 .. code-block:: python
@@ -127,7 +144,8 @@ Key benefits:
 
 
 Visualize Q-Q plots for each feature
-------------------------------------
+====================================
+
 Q-Q (quantile-quantile) plot for each feature in a dataset is a highly effective method for assessing whether the distribution of the data conforms to a theoretical distribution, typically the normal distribution.
 
 .. code-block:: python
@@ -142,7 +160,8 @@ Key benefits:
 
 
 Visualize missing data patterns
--------------------------------
+===============================
+
 Visualizing missing data patterns is crucial in understanding the structure and impact of missingness in your dataset. This can guide decisions regarding data cleaning, imputation strategies, and even inform about potential biases or issues in data collection processes.
 
 .. code-block:: python
@@ -151,7 +170,8 @@ Visualizing missing data patterns is crucial in understanding the structure and 
 
 
 Visualize missing percentages for both features and samples
------------------------------------------------------------
+===========================================================
+
 Visualizing missing percentages for both features (variables) and samples (observations) in a dataset can provide crucial insights into the extent and distribution of missing data. This information is essential for effective data preprocessing and ensuring robust statistical analyses.
 
 
@@ -161,7 +181,8 @@ Visualizing missing percentages for both features (variables) and samples (obser
 
 
 Perform Little's MCAR test
---------------------------
+==========================
+
 Little's MCAR (Missing Completely at Random) test is a statistical test used to analyze the mechanism of missing data in a dataset. This test helps to determine whether the missing data are indeed MCAR, meaning that the likelihood of data being missing is the same across all observations. It contrasts with other types of missing data mechanisms, such as Missing at Random (MAR) and Missing Not at Random (MNAR), where the probability of missing data depends on the observed data or unobserved data, respectively.
 
 Key points:
@@ -176,7 +197,7 @@ Key points:
     print(f"MCAR Test Result: {mcar_result}")
 
 
-
+==================
 Imputation methods
 ==================
 
@@ -184,7 +205,8 @@ Perform imputation of continuous data
 
 
 Mean Imputation
----------------
+===============
+
 Mean imputation handles missing data in a dataset by replacing the missing values with the mean of the available (non-missing) values in the same variable. Implemented using `sklearn.impute.SimpleImputer <https://scikit-learn.org/stable/modules/generated/sklearn.impute.SimpleImputer.html>`_.
 
 Key points:
@@ -200,7 +222,8 @@ Key points:
 
 
 Median Imputation
------------------
+=================
+
 Median imputation is a technique used to handle missing data by substituting missing values with the median of the available data for a particular variable. Implemented using `sklearn.impute.SimpleImputer <https://scikit-learn.org/stable/modules/generated/sklearn.impute.SimpleImputer.html>`_.
 
 Key points:
@@ -216,7 +239,8 @@ Key points:
 
 
 Most Frequent Imputation
-------------------------
+========================
+
 Most Frequent Imputation, also known as Mode Imputation, involves substituting missing values with the most frequently occurring value in a dataset. While typically used for categorical data, it can also be applied to continuous data, particularly when there are repeated or common values that dominate a dataset. However, its applicability and effectiveness for continuous data are generally more limited and need careful consideration. Implemented using `sklearn.impute.SimpleImputer <https://scikit-learn.org/stable/modules/generated/sklearn.impute.SimpleImputer.html>`_.
 
 .. code-block:: python
@@ -227,7 +251,8 @@ Most Frequent Imputation, also known as Mode Imputation, involves substituting m
 
 
 KNN Imputation
---------------
+==============
+
 K-Nearest Neighbors (KNN) imputation is suitable for continuous data where relationships among features can help predict missing values. The "knn_imputation()" function applied the `KNNImputer <https://scikit-learn.org/stable/modules/generated/sklearn.impute.KNNImputer.html>`_ from the sklearn.impute module in Scikit-learn that utilizes the K-Nearest Neighbors approach to replace missing values using the mean of the nearest neighbors found in the training set.
 
 Key points:
@@ -243,7 +268,8 @@ Key points:
 
 
 Iterative Imputation
---------------------
+====================
+
 The iterative_imputation() function applies the base `IterativeImputer <https://scikit-learn.org/stable/modules/generated/sklearn.impute.IterativeImputer.html>`_ from sklearn.impute. The IterativeImputer from Scikit-learn is an advanced imputation technique that models each feature with missing values as a function of other features in a round-robin or iterative fashion. It is a flexible imputation technique based on multivariate imputation by chained equations (MICE), a strategy that models each variable with missing values conditionally on the others through specified regression models. By default the base IterativeImputer uses a linear estimator `BayesianRidge <https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.BayesianRidge.html>`_.
 
 .. code-block:: python
@@ -254,7 +280,8 @@ The iterative_imputation() function applies the base `IterativeImputer <https://
 
 
 Imputation by Random Forest
----------------------------
+===========================
+
 The random_forest_imputation() function is an implementation of `IterativeImputer <https://scikit-learn.org/stable/modules/generated/sklearn.impute.IterativeImputer.html>`_ where the base estimator has been replaced by `RandomForestRegressor <https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html>`_. This method may be useful when data display a non-linear relationship within features.
 
 .. code-block:: python
@@ -265,7 +292,8 @@ The random_forest_imputation() function is an implementation of `IterativeImpute
 
 
 Imputation by LASSO CV
-----------------------
+======================
+
 This `IterativeImputer <https://scikit-learn.org/stable/modules/generated/sklearn.impute.IterativeImputer.html>`_ implementation applies LASSO model with cross-validation, `LassoCV <https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LassoCV.html>`_.
 
 .. code-block:: python
@@ -276,7 +304,8 @@ This `IterativeImputer <https://scikit-learn.org/stable/modules/generated/sklear
 
 
 Imputation by XGBoost
----------------------
+=====================
+
 The xgboost_imputation() function is an implementation of `IterativeImputer <https://scikit-learn.org/stable/modules/generated/sklearn.impute.IterativeImputer.html>`_ where the base estimator has been replaced by `XGBRegressor <https://xgboost.readthedocs.io/en/stable/parameter.html>`_. This method may be useful when data display a non-linear relationship within features.
 
 .. code-block:: python
@@ -287,7 +316,8 @@ The xgboost_imputation() function is an implementation of `IterativeImputer <htt
 
 
 Imputation by Xputer
---------------------
+====================
+
 The `Xputer <https://github.com/kazilab/xputer>`_ is a novel imputation tool that adeptly integrates Non-negative Matrix Factorization (NMF) with the predictive strengths of XGBoost.
 
 .. code-block:: python
@@ -298,7 +328,8 @@ The `Xputer <https://github.com/kazilab/xputer>`_ is a novel imputation tool tha
 
 
 Multiple Imputation by MICE
----------------------------
+===========================
+
 This function applies statsmodels models `mice <https://www.statsmodels.org/dev/generated/statsmodels.imputation.mice.MICE.html>`_  module to data sets with missing values using the ‘multiple imputation with chained equations’ (MICE) approach.
 
 
@@ -309,13 +340,14 @@ This function applies statsmodels models `mice <https://www.statsmodels.org/dev/
     imp_data_mice.to_csv('MICE_imputed_data.csv')
 
 
-
+==============================================
 Check after imputation and perform comparisons
 ==============================================
 
 
 Check Plausibility
-------------------
+==================
+
 In this function, we compare imputed data distribution with the original data distribution. We calculate the statistics of each feature using `pandas.DataFrame.describe <https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.describe.html>`_, calculate statistical differences using `scipy.stats.ks_2samp <https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ks_2samp.html>`_, and overlay density plotes of original and imputed data.
 
 .. code-block:: python
@@ -324,7 +356,8 @@ In this function, we compare imputed data distribution with the original data di
 
 
 Compare with T-test and plot
-----------------------------
+============================
+
 This function provides a standard error of the mean (SEM) using `scipy.stats.sem <https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.sem.html>`_, P-values using `scipy.stats.ttest_ind <https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_ind.html>`_, and violin plots.
 
 .. code-block:: python
@@ -333,7 +366,8 @@ This function provides a standard error of the mean (SEM) using `scipy.stats.sem
 
 
 Visualize feature combination plots for each feature pair
----------------------------------------------------------
+=========================================================
+
 Plots each feature pairs in a 2D-dimensional space.
 
 .. code-block:: python
@@ -341,13 +375,15 @@ Plots each feature pairs in a 2D-dimensional space.
     xg_test.feature_combinations()
 
 
-
+====================================
 Compare different imputation methods
 ====================================
 
 Perform a test to check which imputation method fits your data. We use the XeroCompare application provided in XeroGraph to compare different imputation methods. For analysis, you may provide a dataset with the minimum number of missing values as XeroCompare will remove rows with missing values. The application can be implemented under XeroAnalyzer or independently as XeroCompare.
 
-With XeroAnalyzer:
+With XeroAnalyzer
+=================
+
 
 .. code-block:: python
 
@@ -357,7 +393,8 @@ With XeroAnalyzer:
     print(summary)
 
 
-Independently as XeroCompare:
+Independently as XeroCompare
+===========================
 
 .. code-block:: python
 
