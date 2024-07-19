@@ -41,6 +41,7 @@ Alternatively, if you have access to the source code, navigate to the root direc
 
     python setup.py install
 
+===============
 Getting Started
 ===============
 
