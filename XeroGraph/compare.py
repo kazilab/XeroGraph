@@ -143,7 +143,7 @@ def iterative_imputation(data, max_iter=25):
 def random_forest_imputation(data):
     min_value = np.min(np.min(data, axis=0))
     max_value = np.max(np.max(data, axis=0))
-    imputer = impute.IterativeImputer(estimator=RandomForestRegressor(n_jobs=-1), max_iter=25, random_state=0,
+    imputer = impute.IterativeImputer(estimator=RandomForestRegressor(n_jobs=-1), max_iter=100, random_state=0,
                                       min_value=min_value, max_value=max_value)
     imputed = imputer.fit_transform(data)
     df = pd.DataFrame(imputed, index=data.index, columns=data.columns)
