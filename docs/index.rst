@@ -15,6 +15,7 @@ documentation for details.
    :maxdepth: 2
    :caption: Contents:
 
-
+   venv
+   installation
    usage
 
