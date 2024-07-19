@@ -158,7 +158,7 @@ Perform Little's MCAR test
 --------------------------
 Little's MCAR (Missing Completely at Random) test is a statistical test used to analyze the mechanism of missing data in a dataset. This test helps to determine whether the missing data are indeed MCAR, meaning that the likelihood of data being missing is the same across all observations. It contrasts with other types of missing data mechanisms, such as Missing at Random (MAR) and Missing Not at Random (MNAR), where the probability of missing data depends on the observed data or unobserved data, respectively.
 
-Key Points:
+Key points:
     (1) MCAR: Missing Completely at Random implies that the missingness of data is independent of both observed and unobserved data. This is the strongest form of randomness in the context of missing data.
     (2) Statistical Test: Little's MCAR test uses a chi-square test to compare observed data patterns with expected patterns if the data were MCAR. The null hypothesis (H0) is that the data are MCAR.
     (3) Outcome: The test provides a p-value: If the p-value is small (typically <0.05), it suggests that there is less than a 5% probability that the data are MCAR given the observed data patterns, leading to rejection of the null hypothesis. If the p-value is large, it suggests insufficient evidence to reject the null hypothesis, indicating that the missing data may indeed be MCAR.
@@ -177,7 +177,8 @@ Perform imputation of continuous data
 Mean Imputation
 ---------------
 Mean imputation handles missing data in a dataset by replacing the missing values with the mean of the available (non-missing) values in the same variable. Implemented using `sklearn.impute.SimpleImputer <https://scikit-learn.org/stable/modules/generated/sklearn.impute.SimpleImputer.html>`_.
-Usage:
+
+Key points:
     (1) Preliminary Analysis: It might be suitable for initial exploratory data analysis when a quick, temporary fix for missing data is needed to enable broad overview analyses.
     (2) Random Missing Data: If you can reasonably assume that data are missing completely at random (MCAR), the bias introduced by mean imputation might be minimal.
 
@@ -191,8 +192,9 @@ Usage:
 
 Median Imputation
 -----------------
-Median imputation is a technique used to handle missing data by substituting missing values with the median of the available data for a particular variable.
-Usage:
+Median imputation is a technique used to handle missing data by substituting missing values with the median of the available data for a particular variable. Implemented using `sklearn.impute.SimpleImputer <https://scikit-learn.org/stable/modules/generated/sklearn.impute.SimpleImputer.html>`_.
+
+Key points:
     (1) Highly Skewed Data: Median imputation is particularly useful in datasets where features are highly skewed.
     (2) Preliminary Data Analysis: It can be used in preliminary data analysis where a quick and robust method is needed to handle missing values without dropping large portions of data.
     (3) Robust Models: When the analytical methods used downstream are less sensitive to changes in variance (MCAR) but more sensitive to outliers.
@@ -205,6 +207,7 @@ Usage:
 
 Most Frequent Imputation
 ------------------------
+Most Frequent Imputation, also known as Mode Imputation, involves substituting missing values with the most frequently occurring value in a dataset. While typically used for categorical data, it can also be applied to continuous data, particularly when there are repeated or common values that dominate a dataset. However, its applicability and effectiveness for continuous data are generally more limited and need careful consideration. Implemented using `sklearn.impute.SimpleImputer <https://scikit-learn.org/stable/modules/generated/sklearn.impute.SimpleImputer.html>`_.
 
 .. code-block:: python
 
@@ -214,6 +217,12 @@ Most Frequent Imputation
 
 KNN Imputation
 --------------
+K-Nearest Neighbors (KNN) imputation is suitable for continuous data where relationships among features can help predict missing values. The "knn_imputation()" function applied the `KNNImputer <https://scikit-learn.org/stable/modules/generated/sklearn.impute.KNNImputer.html>`_ from the sklearn.impute module in Scikit-learn that utilizes the K-Nearest Neighbors approach to replace missing values using the mean of the nearest neighbors found in the training set.
+
+Key points:
+    (1) Utilizes Correlations: Unlike simpler methods like mean or median imputation, KNN imputation can exploit the underlying relationships between features to make more accurate imputations.
+    (2) Flexibility: It is inherently flexible because it does not assume a specific distribution of the data and can adapt to the particular structure of the dataset.
+    (3) Non-Parametric: As a non-parametric method, it does not require fitting a model and is particularly useful in scenarios where parametric assumptions cannot be satisfied.
 
 .. code-block:: python
 
