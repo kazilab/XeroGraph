@@ -1,5 +1,6 @@
 import math
 import datetime
+import warnings
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -7,6 +8,7 @@ import seaborn as sns
 from scipy.stats import chi2, probplot, shapiro, kstest, ks_2samp, ttest_ind, sem
 from itertools import combinations
 from sklearn.experimental import enable_iterative_imputer
+from sklearn.exceptions import ConvergenceWarning
 from sklearn import impute
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import LassoCV
@@ -16,6 +18,8 @@ import statsmodels.api as sm
 from .xputer_main import Xpute
 from .utils import freedman_diaconis
 from .compare import XeroCompare
+# Ignore ConvergenceWarning from sklearn
+warnings.filterwarnings("ignore", category=ConvergenceWarning)
 
 
 class XeroAnalyzer:
