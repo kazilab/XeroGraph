@@ -190,7 +190,7 @@ def mice_imp(data):
         other_columns = list(data.columns.drop(column))  # All columns except the current one
         formula = f"{column} ~ " + " + ".join(other_columns)
         mi_model = mice.MICE(formula, sm.OLS, mice_data)
-        mi_model.fit(10, 10)  # Using 10 imputations with 10 iterations each
+        _ = mi_model.fit(10, 10)  # Using 10 imputations with 10 iterations each
 
     # Retrieve imputed data
     imputed_data = mice_data.data
