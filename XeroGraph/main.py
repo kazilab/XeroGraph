@@ -181,7 +181,7 @@ class XeroAnalyzer:
 
         # Loop through all columns and create a histogram in each subplot
         for i, col in enumerate(self.data.columns):
-            bins=freedman_diaconis(self.data[col].dropna())
+            bins = freedman_diaconis(self.data[col].dropna())
             if bins < 30:
                 bins = 30
             axes[i].hist(self.data[col], bins=bins, color='blue', alpha=0.5)
@@ -329,7 +329,8 @@ class XeroAnalyzer:
     def ks(self):
         # Kolmogorov-Smirnov test assuming normal distribution
         for col in self.data.columns:
-            stat, p = kstest(self.data[col].dropna(), 'norm', args=(self.data[col].dropna().mean(), self.data[col].dropna().std()))
+            stat, p = kstest(self.data[col].dropna(), 'norm', args=(self.data[col].dropna().mean(), 
+                                                                    self.data[col].dropna().std()))
             # 'norm' indicates that the sample data is being compared to a normal (Gaussian) distribution.
             print(f'{col}: Statistics=%.3f, p=%.3f' % (stat, p))
             # Interpret results
@@ -615,7 +616,6 @@ class XeroAnalyzer:
 
         # Show the plot
         plt.show()
-
 
     def compare_imputers(self, run_mice=False):
         compare_imp = XeroCompare(self.data)
