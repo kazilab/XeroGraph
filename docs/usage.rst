@@ -62,7 +62,7 @@ Practical Considerations
 
 Perform the Kolmogorov-Smirnov test for each feature
 ------------------------------------------------
-The `Kolmogorov-Smirnov (KS) test <https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.kstest.html#scipy.stats.kstest>`_ is a non-parametric test used to determine if a sample comes from a population with a specific distribution. It compares the empirical distribution function (EDF) of the sample with the cumulative distribution function (CDF) of the specified theoretical distribution, and it provides a test statistic that measures the largest discrepancy between them. The test is useful for comparing a sample with a reference probability distribution, or comparing two samples to check if they come from the same distribution.
+The `Kolmogorov-Smirnov (KS) test <https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.kstest.html>`_ is a non-parametric test used to determine if a sample comes from a population with a specific distribution. It compares the empirical distribution function (EDF) of the sample with the cumulative distribution function (CDF) of the specified theoretical distribution, and it provides a test statistic that measures the largest discrepancy between them. The test is useful for comparing a sample with a reference probability distribution or comparing two samples to check if they come from the same distribution.
 
 .. code-block:: python
 
@@ -79,6 +79,11 @@ Interpretation of "ks()" test results
 
 Visualize histograms for each feature
 -------------------------------------
+Histograms provide a visual representation of how data points are distributed across different intervals or "bins". We applied "Freedman-Diaconis" rule to determine the bins. Visualizing histograms for each feature can provide various information including:
+    (1) Detect skewness: Histograms can identify if data for a particular feature are skewed to the left or right.
+    (2) Identify modality: Histograms help in recognizing if data are unimodal (one peak), bimodal (two peaks), or multimodal (multiple peaks), which can influence the selection of appropriate statistical tests or data preprocessing techniques.
+    (3) Outliers: Histograms make it easier to spot outliers which appear as bars isolated from the bulk of the data. Outliers can be the result of data entry errors, measurement errors, or actual variability in data, and may significantly affect the results of statistical analyses and predictive models.
+    (4) Anomalies: Unusual patterns, such as unexpected spikes in a histogram, can indicate data issues or important insights into dataset characteristics.
 
 .. code-block:: python
 
@@ -86,6 +91,10 @@ Visualize histograms for each feature
 
 Visualize density plots for each feature
 ----------------------------------------
+Density plots are smoothed, continuous versions of histograms and are useful for visualizing the underlying distribution of the data without being tied to the choice of bins.
+    (1) Smooth representation: Unlike histograms, density plots provide a smooth curve representing the distribution, which can help in identifying the shape of the distribution more clearly (e.g., bimodal, normal, skewed).
+    (2) Comparison of distributions: They are particularly useful when you need to compare the distribution of data across different groups or conditions within the same plot.
+    (3) Handling overlap: Density plots can handle overlap better than histograms by showing peaks where data are concentrated, even if multiple groups are plotted together.
 
 .. code-block:: python
 
@@ -93,6 +102,11 @@ Visualize density plots for each feature
 
 Visualize box plots for each feature
 ------------------------------------
+Box plots, also known as box-and-whisker plots, provide a concise and informative summary of the distribution of data across its quartiles and are particularly useful for identifying outliers, median, and data variability.
+
+Key Benefits of Box Plots
+    (1) Five-Number Summary: Each box plot provides a visual representation of the minimum, first quartile (Q1), median (second quartile, Q2), third quartile (Q3), and maximum of a dataset. This five-number summary is crucial for quickly understanding the central tendency and dispersion of the data.
+    (2) Detection of Outliers: Box plots make it easy to identify outliers as points that appear outside of the whiskers, which typically extend 1.5 times the interquartile range (IQR) from the quartiles. This feature is especially useful for deciding whether to exclude outliers from further analyses or for understanding the spread and tails of the distribution.
 
 .. code-block:: python
 
@@ -100,6 +114,12 @@ Visualize box plots for each feature
 
 Visualize Q-Q plots for each feature
 ------------------------------------
+Q-Q (quantile-quantile) plot for each feature in a dataset is a highly effective method for assessing whether the distribution of the data conforms to a theoretical distribution, typically the normal distribution.
+
+Key Benefits of Q-Q Plots:
+    (1) Visual inspection of normal distribution: A Q-Q plot provides a visual means to assess the normality of data. If the data points (quantiles of the sample data) fall approximately along a straight line, the sample can be considered normally distributed. Deviations from this line indicate departures from normality.
+    (2) Sensitivity to deviations: Q-Q plots are particularly sensitive to deviations in the tails of the distribution, making them superior to other techniques like histograms or box plots for detecting outliers and skewness.
+    (3) Identifying Outliers: Points that deviate significantly from the reference line in a Q-Q plot can indicate potential outliers, especially those in the tails.
 
 .. code-block:: python
 
