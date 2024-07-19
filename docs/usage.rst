@@ -139,6 +139,7 @@ Key benefits:
 
 Visualize missing data patterns
 -------------------------------
+Visualizing missing data patterns is crucial in understanding the structure and impact of missingness in your dataset. This can guide decisions regarding data cleaning, imputation strategies, and even inform about potential biases or issues in data collection processes.
 
 .. code-block:: python
 
@@ -146,6 +147,8 @@ Visualize missing data patterns
 
 Visualize missing percentages for both features and samples
 -----------------------------------------------------------
+Visualizing missing percentages for both features (variables) and samples (observations) in a dataset can provide crucial insights into the extent and distribution of missing data. This information is essential for effective data preprocessing and ensuring robust statistical analyses.
+
 
 .. code-block:: python
 
@@ -153,6 +156,13 @@ Visualize missing percentages for both features and samples
 
 Perform Little's MCAR test
 --------------------------
+Little's MCAR (Missing Completely at Random) test is a statistical test used to analyze the mechanism of missing data in a dataset. This test helps to determine whether the missing data are indeed MCAR, meaning that the likelihood of data being missing is the same across all observations. It contrasts with other types of missing data mechanisms, such as Missing at Random (MAR) and Missing Not at Random (MNAR), where the probability of missing data depends on the observed data or unobserved data, respectively.
+
+Key Points:
+    (1) MCAR: Missing Completely at Random implies that the missingness of data is independent of both observed and unobserved data. This is the strongest form of randomness in the context of missing data.
+    (2) Statistical Test: Little's MCAR test uses a chi-square test to compare observed data patterns with expected patterns if the data were MCAR. The null hypothesis (H0) is that the data are MCAR.
+    (3) Outcome: The test provides a p-value: If the p-value is small (typically <0.05), it suggests that there is less than a 5% probability that the data are MCAR given the observed data patterns, leading to rejection of the null hypothesis. If the p-value is large, it suggests insufficient evidence to reject the null hypothesis, indicating that the missing data may indeed be MCAR.
+
 
 .. code-block:: python
 
@@ -166,6 +176,10 @@ Perform imputation of continuous data
 
 Mean Imputation
 ---------------
+Mean imputation handles missing data in a dataset by replacing the missing values with the mean of the available (non-missing) values in the same variable. Implemented using `sklearn.impute.SimpleImputer <https://scikit-learn.org/stable/modules/generated/sklearn.impute.SimpleImputer.html>`_.
+Usage:
+    (1) Preliminary Analysis: It might be suitable for initial exploratory data analysis when a quick, temporary fix for missing data is needed to enable broad overview analyses.
+    (2) Random Missing Data: If you can reasonably assume that data are missing completely at random (MCAR), the bias introduced by mean imputation might be minimal.
 
 .. code-block:: python
 
@@ -173,8 +187,15 @@ Mean Imputation
     # to export data as CSV
     imp_data_mean.to_csv('mean_imputed_data.csv')
 
+
+
 Median Imputation
 -----------------
+Median imputation is a technique used to handle missing data by substituting missing values with the median of the available data for a particular variable.
+Usage:
+    (1) Highly Skewed Data: Median imputation is particularly useful in datasets where features are highly skewed.
+    (2) Preliminary Data Analysis: It can be used in preliminary data analysis where a quick and robust method is needed to handle missing values without dropping large portions of data.
+    (3) Robust Models: When the analytical methods used downstream are less sensitive to changes in variance (MCAR) but more sensitive to outliers.
 
 .. code-block:: python
 
