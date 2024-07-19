@@ -7,6 +7,7 @@ How to use
 
 Here's a quick example to get you started with performing Little's MCAR test, visualizing the data, and imputation. We use the XeroAnalyzer application provided in XeroGraph.
 
+
 Importing XeroAnalyzer
 -----------------------
 
@@ -15,6 +16,7 @@ Importing XeroAnalyzer
     # XeroAnalyzer can be imported as XA, xa, xeroanalyzer, xero_analyzer, or XeroAnalyzer
     from XeroGraph import xa
     import pandas as pd
+
 
 Example data
 ------------
@@ -30,6 +32,7 @@ Example data
     })
     print(data.shape)
 
+
 Initialize the XeroGraph analyzer
 ---------------------------------
 
@@ -38,6 +41,7 @@ Initialize the XeroGraph analyzer
     # Optional arguments:
     # To save plot: save_plot=True, save_path='save path'
     xg_test = xa(data, save_files=False, save_path="")
+
 
 Perform normality test for each feature
 ---------------------------------------
@@ -145,6 +149,7 @@ Visualizing missing data patterns is crucial in understanding the structure and 
 
     xg_test.missing_data()
 
+
 Visualize missing percentages for both features and samples
 -----------------------------------------------------------
 Visualizing missing percentages for both features (variables) and samples (observations) in a dataset can provide crucial insights into the extent and distribution of missing data. This information is essential for effective data preprocessing and ensuring robust statistical analyses.
@@ -153,6 +158,7 @@ Visualizing missing percentages for both features (variables) and samples (obser
 .. code-block:: python
 
     xg_test.missing_percentage()
+
 
 Perform Little's MCAR test
 --------------------------
@@ -169,10 +175,13 @@ Key points:
     mcar_result = xg_test.mcar()
     print(f"MCAR Test Result: {mcar_result}")
 
+
+
 Imputation methods
 ==================
 
 Perform imputation of continuous data
+
 
 Mean Imputation
 ---------------
@@ -205,6 +214,7 @@ Key points:
     # to export data as CSV
     imp_data_median.to_csv('median_imputed_data.csv')
 
+
 Most Frequent Imputation
 ------------------------
 Most Frequent Imputation, also known as Mode Imputation, involves substituting missing values with the most frequently occurring value in a dataset. While typically used for categorical data, it can also be applied to continuous data, particularly when there are repeated or common values that dominate a dataset. However, its applicability and effectiveness for continuous data are generally more limited and need careful consideration. Implemented using `sklearn.impute.SimpleImputer <https://scikit-learn.org/stable/modules/generated/sklearn.impute.SimpleImputer.html>`_.
@@ -214,6 +224,7 @@ Most Frequent Imputation, also known as Mode Imputation, involves substituting m
     imp_data_most_frequent = xg_test.most_frequent_imputation()
     # to export data as CSV
     imp_data_most_frequent.to_csv('most_frequent_imputed_data.csv')
+
 
 KNN Imputation
 --------------
@@ -230,8 +241,10 @@ Key points:
     # to export data as CSV
     imp_data_knn.to_csv('KNN_imputed_data.csv')
 
+
 Iterative Imputation
 --------------------
+The iterative_imputation() function applies the base `IterativeImputer <https://scikit-learn.org/stable/modules/generated/sklearn.impute.IterativeImputer.html>`_ from sklearn.impute. The IterativeImputer from Scikit-learn is an advanced imputation technique that models each feature with missing values as a function of other features in a round-robin or iterative fashion. It is a flexible imputation technique based on multivariate imputation by chained equations (MICE), a strategy that models each variable with missing values conditionally on the others through specified regression models. By default the base IterativeImputer uses a linear estimator `BayesianRidge <https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.BayesianRidge.html>`_.
 
 .. code-block:: python
 
@@ -239,8 +252,10 @@ Iterative Imputation
     # to export data as CSV
     imp_data_ii.to_csv('Iterative_imputed_data.csv')
 
+
 Imputation by Random Forest
 ---------------------------
+The random_forest_imputation() function is an implementation of `IterativeImputer <https://scikit-learn.org/stable/modules/generated/sklearn.impute.IterativeImputer.html>`_ where the base estimator has been replaced by `RandomForestRegressor <https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html>`_. This method may be useful when data display a non-linear relationship within features.
 
 .. code-block:: python
 
@@ -248,8 +263,10 @@ Imputation by Random Forest
     # to export data as CSV
     imp_data_rf.to_csv('RandomForest_imputed_data.csv')
 
+
 Imputation by LASSO CV
 ----------------------
+This `IterativeImputer <https://scikit-learn.org/stable/modules/generated/sklearn.impute.IterativeImputer.html>`_ implementation applies LASSO model with cross-validation, `LassoCV <https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LassoCV.html>`_.
 
 .. code-block:: python
 
@@ -257,8 +274,10 @@ Imputation by LASSO CV
     # to export data as CSV
     imp_data_lc.to_csv('LASSOCV_imputed_data.csv')
 
+
 Imputation by XGBoost
 ---------------------
+The xgboost_imputation() function is an implementation of `IterativeImputer <https://scikit-learn.org/stable/modules/generated/sklearn.impute.IterativeImputer.html>`_ where the base estimator has been replaced by `XGBRegressor <https://xgboost.readthedocs.io/en/stable/parameter.html>`_. This method may be useful when data display a non-linear relationship within features.
 
 .. code-block:: python
 
@@ -266,8 +285,10 @@ Imputation by XGBoost
     # to export data as CSV
     imp_data_xb.to_csv('XGBoost_imputed_data.csv')
 
+
 Imputation by Xputer
 --------------------
+The `Xputer <https://github.com/kazilab/xputer>`_ is a novel imputation tool that adeptly integrates Non-negative Matrix Factorization (NMF) with the predictive strengths of XGBoost.
 
 .. code-block:: python
 
@@ -275,8 +296,11 @@ Imputation by Xputer
     # to export data as CSV
     imp_data_xp.to_csv('Xputer_imputed_data.csv')
 
+
 Multiple Imputation by MICE
 ---------------------------
+This function applies statsmodels models `mice <https://www.statsmodels.org/dev/generated/statsmodels.imputation.mice.MICE.html>`_  module to data sets with missing values using the ‘multiple imputation with chained equations’ (MICE) approach.
+
 
 .. code-block:: python
 
@@ -284,29 +308,39 @@ Multiple Imputation by MICE
     # to export data as CSV
     imp_data_mice.to_csv('MICE_imputed_data.csv')
 
+
+
 Check after imputation and perform comparisons
 ==============================================
 
+
 Check Plausibility
 ------------------
+In this function, we compare imputed data distribution with the original data distribution. We calculate the statistics of each feature using `pandas.DataFrame.describe <https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.describe.html>`_, calculate statistical differences using `scipy.stats.ks_2samp <https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ks_2samp.html>`_, and overlay density plotes of original and imputed data.
 
 .. code-block:: python
 
     xg_test.check_plausibility(imp_data_rf)
 
+
 Compare with T-test and plot
 ----------------------------
+This function provides a standard error of the mean (SEM) using `scipy.stats.sem <https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.sem.html>`_, P-values using `scipy.stats.ttest_ind <https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_ind.html>`_, and violin plots.
 
 .. code-block:: python
 
     xg_test.compare_with_ttest_and_plot(imp_data_ii)
 
+
 Visualize feature combination plots for each feature pair
 ---------------------------------------------------------
+Plots each feature pairs in a 2D-dimensional space.
 
 .. code-block:: python
 
     xg_test.feature_combinations()
+
+
 
 Comparison with XeroCompare
 ===========================
