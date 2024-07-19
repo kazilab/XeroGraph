@@ -614,7 +614,7 @@ class XeroAnalyzer:
 
 
     def compare_imputers(self, run_mice=False):
-        compare_imp = XeroCompare(data)
+        compare_imp = XeroCompare(self.data)
         # MICE imputation is a slow process, if you want to include pass "run_mice=True".
         summary = compare_imp.compare(run_mice=run_mice)
         return summary
