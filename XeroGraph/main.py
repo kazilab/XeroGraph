@@ -555,7 +555,7 @@ class XeroAnalyzer:
             formula = f"{column} ~ " + " + ".join(other_columns)
             mi_model = mice.MICE(formula, sm.OLS, mice_data)
             mi_results = mi_model.fit(10, 10)  # Using 10 imputations with 10 iterations each
-            print(mi_results)
+            print(mi_results.summary())
 
         # Retrieve imputed data
         imputed_data = mice_data.data
