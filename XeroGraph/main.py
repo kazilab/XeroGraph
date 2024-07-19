@@ -426,7 +426,7 @@ class XeroAnalyzer:
 
     def random_forest_imputation(self):
         imputer = impute.IterativeImputer(estimator=RandomForestRegressor(n_jobs=-1),
-                                          max_iter=25, random_state=0,
+                                          max_iter=100, random_state=0,
                                           min_value=self.min_value, max_value=self.max_value)
         imputed = imputer.fit_transform(self.data)
 
