@@ -184,7 +184,7 @@ class XeroAnalyzer:
             bins = freedman_diaconis(self.data[col].dropna())
             if bins < 30:
                 bins = 30
-            axes[i].hist(self.data[col], bins=bins, color='blue', alpha=0.5)
+            axes[i].hist(self.data[col].dropna(), bins=bins, color='blue', alpha=0.5)
             axes[i].set_title(col)
             axes[i].set_xlabel('Value')
             axes[i].set_ylabel('Frequency')
@@ -219,7 +219,7 @@ class XeroAnalyzer:
         axes = axes.flatten()
 
         for i, col in enumerate(self.data.columns):
-            self.data[col].plot(kind='density', ax=axes[i])
+            self.data[col].dropna().plot(kind='density', ax=axes[i])
             axes[i].set_title(col)
             axes[i].set_xlabel('Value')
 
@@ -254,8 +254,8 @@ class XeroAnalyzer:
         for i, col in enumerate(self.data.columns):
             # Plot the boxplot on the correct subplot axis
             self.data.boxplot(column=[col], ax=axes[i])
-            axes[i].set_title(col)
-            axes[i].set_xlabel('Value')
+            # axes[i].set_title(col)
+            axes[i].set_ylabel('Value')
 
         for ax in axes[len(self.data.columns):]:
             ax.set_visible(False)
@@ -289,7 +289,7 @@ class XeroAnalyzer:
 
         for i, col in enumerate(self.data.columns):
             # Generate a Q-Q plot for each column
-            probplot(self.data[col], dist="norm", plot=axes[i])
+            probplot(self.data[col].dropna(), dist="norm", plot=axes[i])
             axes[i].set_title(f'Q-Q plot for {col}')
 
         # Hide any unused axes if the number of plots is less than the number of subplots
@@ -329,7 +329,7 @@ class XeroAnalyzer:
     def ks(self):
         # Kolmogorov-Smirnov test assuming normal distribution
         for col in self.data.columns:
-            stat, p = kstest(self.data[col].dropna(), 'norm', args=(self.data[col].dropna().mean(), 
+            stat, p = kstest(self.data[col].dropna(), 'norm', args=(self.data[col].dropna().mean(),
                                                                     self.data[col].dropna().std()))
             # 'norm' indicates that the sample data is being compared to a normal (Gaussian) distribution.
             print(f'{col}: Statistics=%.3f, p=%.3f' % (stat, p))
@@ -622,4 +622,3 @@ class XeroAnalyzer:
         # MICE imputation is a slow process, if you want to include pass "run_mice=True".
         summary = compare_imp.compare(run_mice=run_mice)
         return summary
-        
