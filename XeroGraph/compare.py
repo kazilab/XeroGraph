@@ -106,7 +106,7 @@ class XeroCompare:
 
 
 def mean_imputation(data):
-    print(Performing mean imputation)
+    print("Performing mean imputation")
     imputer = impute.SimpleImputer(strategy='mean')
     imputed = imputer.fit_transform(data)
     df = pd.DataFrame(imputed, index=data.index, columns=data.columns)
@@ -114,7 +114,7 @@ def mean_imputation(data):
 
 
 def median_imputation(data):
-    print(Performing median imputation)
+    print("Performing median imputation")
     imputer = impute.SimpleImputer(strategy='median')
     imputed = imputer.fit_transform(data)
     df = pd.DataFrame(imputed, index=data.index, columns=data.columns)
@@ -122,6 +122,7 @@ def median_imputation(data):
 
 
 def most_frequent_imputation(data):
+    print("Performing most frequent imputation")
     imputer = impute.SimpleImputer(strategy='most_frequent')
     imputed = imputer.fit_transform(data)
     df = pd.DataFrame(imputed, index=data.index, columns=data.columns)
@@ -129,7 +130,7 @@ def most_frequent_imputation(data):
 
 
 def knn_imputation(data):
-    print(Performing KNN imputation)
+    print("Performing KNN imputation")
     imputer = impute.KNNImputer()
     imputed = imputer.fit_transform(data)
     df = pd.DataFrame(imputed, index=data.index, columns=data.columns)
@@ -137,7 +138,7 @@ def knn_imputation(data):
 
 
 def iterative_imputation(data, max_iter=25):
-    print(Performing Iterative imputation)
+    print("Performing Iterative imputation")
     min_value = np.min(np.min(data, axis=0))
     max_value = np.max(np.max(data, axis=0))
     imputer = impute.IterativeImputer(max_iter=max_iter, random_state=0,
@@ -148,7 +149,7 @@ def iterative_imputation(data, max_iter=25):
 
 
 def random_forest_imputation(data):
-    print(Performing Iterative imputation using Random Forest)
+    print("Performing Iterative imputation using Random Forest")
     min_value = np.min(np.min(data, axis=0))
     max_value = np.max(np.max(data, axis=0))
     imputer = impute.IterativeImputer(estimator=RandomForestRegressor(n_jobs=-1), max_iter=100, random_state=0,
@@ -159,7 +160,7 @@ def random_forest_imputation(data):
 
 
 def lasso_cv_imputation(data):
-    print(Performing Iterative imputation using Lasso CV)
+    print("Performing Iterative imputation using Lasso CV")
     min_value = np.min(np.min(data, axis=0))
     max_value = np.max(np.max(data, axis=0))
     imputer = impute.IterativeImputer(estimator=LassoCV(max_iter=100000, n_jobs=-1), max_iter=1000, random_state=0,
@@ -170,7 +171,7 @@ def lasso_cv_imputation(data):
 
 
 def xgboost_imputation(data):
-    print(Performing Iterative imputation using XGBoost)
+    print("Performing Iterative imputation using XGBoost")
     min_value = np.min(np.min(data, axis=0))
     max_value = np.max(np.max(data, axis=0))
     imputer = impute.IterativeImputer(estimator=XGBRegressor(n_jobs=-1), max_iter=100, random_state=0,
@@ -181,7 +182,7 @@ def xgboost_imputation(data):
 
 
 def xputer_imputation(data):
-    print(Performing imputation using Xputer)
+    print("Performing imputation using Xputer")
     imputer = Xpute(impute_zeros=False, pre_imputation='MixType', xgb_models=3, mf_for_xgb=True,
                     use_transformed_df=False, optuna_for_xgb=True, optuna_n_trials=50, n_iterations=3,
                     save_imputed_df=False, save_plots=False, test_mode=False)
@@ -190,7 +191,7 @@ def xputer_imputation(data):
 
 
 def mice_imp(data):
-    print(Performing Iterative imputation using MICE)
+    print("Performing Iterative imputation using MICE")
     # Initialize MICEData instance
     mice_data = mice.MICEData(data)
 
