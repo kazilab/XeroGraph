@@ -141,6 +141,20 @@ Key points:
 
 .. code-block:: python
 
-    mcar_result = xg_test.mcar()
-    print(f"MCAR Test Result: {mcar_result}")
+    xg_test.mcar()
 
+
+Check missing type
+==================
+
+This function first check if missing values are MCAR. If it fails it then checks the likelyhood of Missing at Random (MAR) and Missing Not at Random (MNAR).
+
+Key points:
+    (1) MCAR and MAR vs MNAR test: Function provides a suggestion about the missing value type.
+    (2) MAR and MNAR suggestions are for each columns.
+    (3) Outcome: The test provides statistics with interpretation.
+
+
+.. code-block:: python
+
+    xg_test.missing_type()

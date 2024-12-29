@@ -41,6 +41,22 @@ We create an example dataset with missing values. Users must import data as pand
     print(data.shape)
 
 
+Example datasets
+-------------------------
+We provide severa example datasets. 
+
+.. code-block:: python
+
+   from XeroGraph import DATASETS, load_dataset
+
+    # List available datasets
+    print("Available datasets:", list(DATASETS.keys()))
+
+    # Load a specific dataset
+    df = load_dataset('ACTG175')
+
+
+
 Initialize the XeroAnalyzer
 ===========================
 

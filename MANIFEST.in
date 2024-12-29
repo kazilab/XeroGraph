@@ -1,0 +1,5 @@
+include XeroGraph/data/ACTG175.txt
+include XeroGraph/data/AML.csv
+include XeroGraph/data/Breast_cancer.csv
+include XeroGraph/data/PIMA_Indian.csv
+include XeroGraph/data/Student_dropout.csv

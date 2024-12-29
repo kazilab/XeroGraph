@@ -195,7 +195,7 @@ def preprocessing_df(df, impute_zeros=False, pre_imputation='MixType',
     return df_clean, df_encoded, df_pre_imputed
 
 
-def cnmf(df_encoded, df_pre_imputed):
+def cnmf(df_encoded, df_pre_imputed, test_mode=False):
     """
         Calculate missing values using NMF.
         Args:
@@ -253,8 +253,9 @@ def cnmf(df_encoded, df_pre_imputed):
     df_nmf_transformed.index = original_index
 
     df_nmf_nan_imputed = df_encoded.copy()
-    df_nmf_nan_imputed.to_csv('df_nmf_nan_imputed.csv')
-    df_nmf_transformed.to_csv('df_nmf_transformed.csv')
+    if test_mode:
+        df_nmf_nan_imputed.to_csv('df_nmf_nan_imputed.csv')
+        df_nmf_transformed.to_csv('df_nmf_transformed.csv')
     # df_nmf_nan_imputed[df_nmf_nan_imputed.isna()] = df_nmf_transformed
     for col in df_nmf_nan_imputed.columns:
         df_nmf_nan_imputed.loc[df_nmf_nan_imputed[col].isna(), col] = df_nmf_transformed[col]

@@ -8,7 +8,7 @@ A Python implementation of Little's MCAR test.
 __author__ = 'Julhash Kazi'
 __email__ = 'XeroGraph@kazilab.se'
 __description__ = 'XeroGraph'
-__version__ = '0.0.7'
+__version__ = '0.0.9'
 __url__ = 'https://www.kazilab.se'
 
 from .main import XeroAnalyzer as XA
@@ -21,3 +21,4 @@ from .compare import XeroCompare as xc
 from .compare import XeroCompare as xerocompare
 from .compare import XeroCompare as xero_compare
 from .compare import XeroCompare
+from .utils import DATASETS, load_dataset

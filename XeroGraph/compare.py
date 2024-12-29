@@ -122,7 +122,6 @@ def median_imputation(data):
 
 
 def most_frequent_imputation(data):
-    print("Performing most frequent imputation")
     imputer = impute.SimpleImputer(strategy='most_frequent')
     imputed = imputer.fit_transform(data)
     df = pd.DataFrame(imputed, index=data.index, columns=data.columns)

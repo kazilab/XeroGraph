@@ -24,17 +24,16 @@ try:
     with open("README.md", "r", encoding="utf-8") as fh:
         long_description = fh.read()
 except FileNotFoundError:
-    long_description = ("XeroGraph is developed for research purposes only to perform Little's MCAR test."
-                        "It also visualizes missing values.")
+    long_description = ("XeroGraph is developed for research purposes only to analyze data with missing values.")
 
 # Main setup configuration
 setup(
     name='XeroGraph',
-    version='0.0.7',
+    version='0.0.9',
     author='Julhash Kazi',
     author_email='XeroGraph@kazilab.se',
     url='https://www.kazilab.se',
-    description="A Python implementation of Little's MCAR test, missing value visualization and imputation",
+    description="A Python implementation of Little's MCAR test, MAR vs MNAR analysis, missing value visualization and imputation",
     long_description=long_description,
     long_description_content_type='text/markdown',
     license='Apache-2.0',
@@ -52,10 +51,12 @@ setup(
         'optuna==3.3.0',
         'ipywidgets==8.0.4',
         'joblib==1.2.0',
-        'tqdm==4.65.0'
+        'tqdm==4.65.0',
+        'pingouin==0.5.5'
     ],
     platforms='any',
     packages=find_packages(),
+    include_package_data=True,
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Science/Research',

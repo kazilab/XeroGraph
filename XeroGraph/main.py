@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from scipy.stats import chi2, probplot, shapiro, kstest, ks_2samp, ttest_ind, sem
+from scipy.stats import probplot, shapiro, kstest, ks_2samp, ttest_ind, sem
 from itertools import combinations
 from sklearn.experimental import enable_iterative_imputer
 from sklearn.exceptions import ConvergenceWarning
@@ -16,7 +16,8 @@ from xgboost import XGBRegressor
 from statsmodels.imputation import mice
 import statsmodels.api as sm
 from .xputer_main import Xpute
-from .utils import freedman_diaconis
+from .utils import (freedman_diaconis, little_mcar_test, test_missingness_patterns_ll,
+                    test_missingness_patterns_ll_x_only)
 from .compare import XeroCompare
 # Ignore ConvergenceWarning from sklearn
 warnings.filterwarnings("ignore", category=ConvergenceWarning)
@@ -31,7 +32,7 @@ class XeroAnalyzer:
     missing (DataFrame): A binary matrix indicating missing data within `data`.
     """
 
-    def __init__(self, data, save_files=False, save_path=""):
+    def __init__(self, data, outcome=None, save_files=False, save_path=""):
         """
         Initialize the DataAnalyzer with data.
 
@@ -51,6 +52,10 @@ class XeroAnalyzer:
         # Replace all missing value indicators with np.nan, update the df inplace
         data = data.replace(missing_value_indicators, np.nan)
         self.data = data
+        if outcome is not None:
+            self.outcome = outcome.values
+        else:
+            self.outcome = outcome
         self.missing = None
         self.save_files = save_files
         self.save_path = save_path
@@ -76,35 +81,35 @@ class XeroAnalyzer:
         Returns:
         dict: A dictionary containing the chi-square statistic, degrees of freedom, and p-value.
         """
+        chi_square_stat = None
+        df = None
+        p_value = None
         if self.missing.sum().sum() == 0:
-            return {'chi_square_stat': None, 'df': None, 'p_value': 1.0}
-
-        # Count occurrences of each pattern
-        pattern_counts = self.missing.groupby(list(self.missing.columns)).size()
-
-        # Calculate probabilities of each column being missing
-        col_probs = self.missing.mean()
-
-        # Calculate expected counts for each pattern
-        expected_counts = []
-        for index, row in pattern_counts.index.to_frame().iterrows():
-            p = np.prod([col_probs[col] if row[col] == 1 else 1 - col_probs[col] for col in self.missing.columns])
-            expected_counts.append(len(self.data) * p)
-
-        # Calculate the chi-square statistic
-        chi_square_stat = ((pattern_counts - expected_counts) ** 2 / expected_counts).sum()
-
-        # Degrees of freedom: (number of patterns - 1)
-        df = len(pattern_counts) - 1
-
-        # Calculate p-value from chi-square and df
-        p_value = chi2.sf(chi_square_stat, df)
-
-        # Determine if data is MCAR based on the p-value
-        if p_value > 0.05:
-            print("The data is likely Missing Completely at Random (MCAR).")
+            print("Little's MCAR Test Results:")
+            print(f"  Chi-square  = {chi_square_stat}")
+            print(f"  df          = {df}")
+            print(f"  p-value     = {p_value}")
+            print(f"  # of patterns = 0")
+            print("Missing Data Summary:\n", "No missing vaues")
         else:
-            print("The data is not Missing Completely at Random (MCAR).")
+            result = little_mcar_test(self.data)
+
+            # get values from the results
+            p_value = round(result['p_value'], 4)
+            chi_square_stat = round(result['chi_square'], 4)
+            df = result['df']
+
+            # Determine if data is MCAR based on the p-value
+            print("Little's MCAR Test Results:")
+            print(f"  Chi-square  = {result['chi_square']:.4f}")
+            print(f"  df          = {result['df']}")
+            print(f"  p-value     = {result['p_value']:.4f}")
+            print(f"  # of patterns = {result['missing_patterns']}")
+            print("Missing Data Summary:\n", result["amount_missing"])
+            if p_value > 0.05:
+                print("The data is likely Missing Completely at Random (MCAR).")
+            else:
+                print("The data is probably not Missing Completely at Random (MCAR).")
 
         return {'chi_square_stat': chi_square_stat, 'df': df, 'p_value': p_value}
 
@@ -112,12 +117,26 @@ class XeroAnalyzer:
         """
         Visualize missing data in the DataFrame using a matrix plot and text summary of missing data counts.
         """
-        plt.figure(figsize=(10, 6))
-        plt.imshow(self.missing, aspect='auto', interpolation='nearest', cmap='viridis')
-        plt.xlabel('Columns')
-        plt.ylabel('Rows')
-        plt.title('Matrix of Missing Data')
-        plt.colorbar(label='Missing data (1: missing, 0: present)')
+        # Compute the correlation of missingness
+        missing_corr = self.missing.corr()
+        
+        # Create subplots: one for the missing data matrix, one for the correlation heatmap
+        fig, axes = plt.subplots(2, 1, figsize=(8, 12))
+        
+        # First subplot: Matrix of missing data
+        ax1 = axes[0]
+        ax1.imshow(self.missing, aspect='auto', interpolation='nearest', cmap='viridis')
+        ax1.set_xlabel('Columns')
+        ax1.set_ylabel('Rows')
+        ax1.set_title('Matrix of Missing Data')
+        ax1.colorbar = plt.colorbar(ax1.imshow(self.missing, aspect='auto', interpolation='nearest', cmap='viridis'), ax=ax1)
+        ax1.colorbar.set_label('Missing data (1: missing, 0: present)')
+        
+        # Second subplot: Correlation heatmap
+        ax2 = axes[1]
+        sns.heatmap(missing_corr, annot=False, cmap='coolwarm', cbar=True, ax=ax2)
+        ax2.set_title('Correlation Heatmap of Missing Data Patterns')
+        plt.tight_layout()
         # save plot as pdf
         if self.save_files:
             # Get the current date and time
@@ -181,9 +200,13 @@ class XeroAnalyzer:
 
         # Loop through all columns and create a histogram in each subplot
         for i, col in enumerate(self.data.columns):
-            bins = freedman_diaconis(self.data[col].dropna())
-            if bins < 30:
-                bins = 30
+            unique_values = np.unique(self.data[col])
+            if len(unique_values) <= 10:
+                bins = len(unique_values)
+            else:
+                bins = freedman_diaconis(self.data[col].dropna())
+                if bins < 30:
+                    bins = 30
             axes[i].hist(self.data[col].dropna(), bins=bins, color='blue', alpha=0.5)
             axes[i].set_title(col)
             axes[i].set_xlabel('Value')
@@ -219,9 +242,23 @@ class XeroAnalyzer:
         axes = axes.flatten()
 
         for i, col in enumerate(self.data.columns):
-            self.data[col].dropna().plot(kind='density', ax=axes[i])
-            axes[i].set_title(col)
-            axes[i].set_xlabel('Value')
+            ax = axes[i]
+            column_data = self.data[col].dropna()
+            # Check if the column has a single unique value
+            unique_values = column_data.unique()
+            if len(unique_values) == 1:
+                # Skip plotting and show a placeholder message
+                ax.text(0.5, 0.5, f"Single value:\n{unique_values[0]}",
+                    horizontalalignment='center', verticalalignment='center',
+                    transform=ax.transAxes, fontsize=10)
+                ax.set_title(col)
+                ax.set_xlabel('')
+                ax.set_ylabel('')
+            else:
+                # Plot density for columns with variability
+                column_data.plot(kind='density', ax=axes[i])
+                ax.set_title(col)
+                ax.set_xlabel('Value')
 
         for ax in axes[len(self.data.columns):]:
             ax.set_visible(False)
@@ -314,32 +351,55 @@ class XeroAnalyzer:
         normality_results = {}
 
         for col in self.data.columns:
-            stat, p = shapiro(self.data[col].dropna())
-            normality_results[col] = {'Statistics': stat, 'p-value': p}
+            column_data = self.data[col].dropna()
+            # Check if the column has only a single unique value
+            unique_values = column_data.unique()
+            if len(unique_values) <= 2:
+                normality_results[col] = {'Statistics': None, 'p-value': None, 'Comment': 'Skipped - Single value or binary data'}
+                continue
+            # Perform Shapiro-Wilk test for columns with sufficient variability
+            try:
+                stat, p = shapiro(column_data)
+                normality_results[col] = {'Statistics': stat, 'p-value': p, 'Comment': 'Test successful'}
+            except Exception as e:
+                normality_results[col] = {'Statistics': None, 'p-value': None, 'Comment': f'Test failed: {e}'}
 
         # Display results
         for col, result in normality_results.items():
-            print(f"{col} - Statistics={result['Statistics']:.3f}, p-value={result['p-value']:.3f}")
-            alpha = 0.05
-            if result['p-value'] > alpha:
-                print(f"{col} - Sample looks Gaussian (fail to reject H0)\n")
+            if result['Comment'] != 'Test successful':
+                print(f"{col} - {result['Comment']}\n")
             else:
-                print(f"{col} - Sample does not look Gaussian (reject H0)\n")
+                print(f"{col} - Statistics={result['Statistics']:.3f}, p-value={result['p-value']:.3f}")
+                alpha = 0.05
+                if result['p-value'] > alpha:
+                    print(f"{col} - Sample looks Gaussian (fail to reject H0)\n")
+                else:
+                    print(f"{col} - Sample does not look Gaussian (reject H0)\n")
 
     def ks(self):
         # Kolmogorov-Smirnov test assuming normal distribution
         for col in self.data.columns:
-            stat, p = kstest(self.data[col].dropna(), 'norm', args=(self.data[col].dropna().mean(),
-                                                                    self.data[col].dropna().std()))
-            # 'norm' indicates that the sample data is being compared to a normal (Gaussian) distribution.
-            print(f'{col}: Statistics=%.3f, p=%.3f' % (stat, p))
-            # Interpret results
-            alpha = 0.05
-            if p > alpha:
-                print(f'{col}: Sample looks Gaussian (fail to reject H0)')
-            else:
-                print(f'{col}: Sample does not look Gaussian (reject H0)')
-    
+            column_data = self.data[col].dropna()
+            # Check if the column has only a single unique value
+            unique_values = column_data.unique()
+            if len(unique_values) <= 2:
+                print(f"{col} - Skipped: Single value or binary data")
+                continue
+            try:
+                stat, p = kstest(self.data[col].dropna(), 'norm', args=(self.data[col].dropna().mean(),
+                                                                        self.data[col].dropna().std()))
+                # 'norm' indicates that the sample data is being compared to a normal (Gaussian) distribution.
+                print(f'{col}: Statistics=%.3f, p=%.3f' % (stat, p))
+                # Interpret results
+                alpha = 0.05
+                if p > alpha:
+                    print(f'{col}: Sample looks Gaussian (fail to reject H0)')
+                else:
+                    print(f'{col}: Sample does not look Gaussian (reject H0)')
+            except Exception as e:
+                print(f"{col} - Skipped: Kolmogorov-Smirnov test failed due to {e}\n")
+                
+                
     def mean_imputation(self):
         imputer = impute.SimpleImputer(strategy='mean')
         imputed = imputer.fit_transform(self.data)
@@ -622,3 +682,37 @@ class XeroAnalyzer:
         # MICE imputation is a slow process, if you want to include pass "run_mice=True".
         summary = compare_imp.compare(run_mice=run_mice)
         return summary
+
+    def missing_type(self):
+        if self.outcome is not None:
+            test_results, comment = test_missingness_patterns_ll(self.data, self.outcome)
+            # 1) Print MCAR results
+            mcar_res = test_results["mcar"]
+            print("----- MCAR Test Results -----")
+            for k, v in mcar_res.items():
+                print(f"{k}: {v}")
+            print(f'Comment: {comment}\n')
+
+            # 2) Print MAR vs. MNAR results
+            print("----- MAR vs. MNAR Tests (Feature-wise) -----")
+            for (feature, stat, p_val, decision) in test_results["mar_mnar"]:
+                if p_val is not None:
+                    print(f"{feature:>12s} | LRT = {stat:8.3f} | P-value = {p_val:7.3e} | Conclusion: {decision}")
+                else:
+                    print(f"Conclusion: {decision}")
+        else:
+            test_results, comment = test_missingness_patterns_ll_x_only(self.data)
+            # 1) Print MCAR results
+            mcar_res = test_results["mcar"]
+            print("----- MCAR Test Results -----")
+            for k, v in mcar_res.items():
+                print(f"{k}: {v}")
+            print(f'Comment: {comment}\n')
+            
+            # 2) Print MAR vs. MNAR results
+            print("----- MAR vs. MNAR Tests (Feature-wise) -----")
+            for (feature, stat, p_val, decision) in test_results["mar_mnar"]:
+                if p_val is not None:
+                    print(f"{feature:>12s} | LRT = {stat:8.3f} | P-value = {p_val:7.3e} | Conclusion: {decision}")
+                else:
+                    print(f"Conclusion: {decision}")

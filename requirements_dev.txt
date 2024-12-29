@@ -13,6 +13,7 @@ optuna>=3.6
 ipywidgets>=8.1
 joblib>=1.4
 tqdm>=4.66
+pingouin>=0.5.5
 
 # Testing
 pytest>=5.4
