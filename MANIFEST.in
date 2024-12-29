@@ -3,3 +3,6 @@ include XeroGraph/data/AML.csv
 include XeroGraph/data/Breast_cancer.csv
 include XeroGraph/data/PIMA_Indian.csv
 include XeroGraph/data/Student_dropout.csv
+include XeroGraph/data/data_mar.csv
+include XeroGraph/data/data_mcar.csv
+include XeroGraph/data/data_mnar.csv

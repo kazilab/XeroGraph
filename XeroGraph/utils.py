@@ -731,9 +731,9 @@ DATASETS = {
     'Breast_cancer': ('Breast_cancer', '.csv'),
     'PIMA_Indian': ('PIMA_Indian', '.csv'),
     'Student_dropout': ('Student_dropout', '.csv'),
-    'Simulated_data_mcar': ('simulated_data_mcar', '.csv'),
-    'Simulated_data_mar': ('simulated_data_mar', '.csv'),
-    'Simulated_data_mnar': ('simulated_data_mnar', '.csv')
+    'Simulated_data_mcar': ('data_mcar', '.csv'),
+    'Simulated_data_mar': ('data_mar', '.csv'),
+    'Simulated_data_mnar': ('data_mnar', '.csv')
 }
 
 
